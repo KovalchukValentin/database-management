@@ -39,7 +39,7 @@ class DatabaseHandler:
 
         self.conn.commit()
 
-    def insert_data(self, group_id: str, taste: str, nicotine: int, volume: int, price: int, code: int, count: int):
+    def insert_data_to_items(self, group_id: str, taste: str, nicotine: int, volume: int, price: int, code: int, count: int):
         insert_query = """
         INSERT INTO items (group_id, taste, nicotine, volume, price, code, count)
         VALUES (?, ?, ?, ?, ?, ?, ?);
@@ -48,12 +48,21 @@ class DatabaseHandler:
         self.cursor.execute(insert_query, values)
         self.conn.commit()
 
-    def delete_data(self, row_id):
+    def insert_data_to_groups(self, name: str):
+        insert_query = """
+        INSERT INTO groups (name)
+        VALUES (?);
+        """
+        values = (name)
+        self.cursor.execute(insert_query, values)
+        self.conn.commit()
+
+    def delete_data_from_items(self, row_id):
         delete_query = "DELETE FROM items WHERE id = ?;"
         self.cursor.execute(delete_query, (row_id,))
         self.conn.commit()
 
-    def retrieve_data(self):
+    def retrieve_data_from_items(self):
         retrieve_query = "SELECT * FROM items;"
         self.cursor.execute(retrieve_query)
         rows = self.cursor.fetchall()
