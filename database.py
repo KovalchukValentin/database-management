@@ -16,13 +16,13 @@ class DatabaseHandler:
         CREATE TABLE IF NOT EXISTS items (
             id INTEGER PRIMARY KEY,
             group_id INTEGER,
-            FOREIGN KEY (second_table_id) REFERENCES second_table(id)
             taste TEXT,
             nicotine INTEGER,
             volume INTEGER,
             price INTEGER,
             code INTEGER UNIQUE,
-            count INTEGER
+            count INTEGER,
+            FOREIGN KEY (group_id) REFERENCES groups(id)
             
         );
         """
@@ -34,8 +34,9 @@ class DatabaseHandler:
                );
                """
 
-        self.cursor.execute(create_table_query)
         self.cursor.execute(create_second_table_query)
+        self.cursor.execute(create_table_query)
+
         self.conn.commit()
 
     def insert_data(self, group_id: str, taste: str, nicotine: int, volume: int, price: int, code: int, count: int):
