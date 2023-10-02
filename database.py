@@ -75,7 +75,7 @@ class DatabaseHandler:
 
     def retrieve_data_from_items_with_group_name(self):
         retrieve_query = """
-        SELECT items.*, groups.name
+        SELECT items.id, groups.name, items.taste, items.nicotine, items.volume, items.price, items.code, items.count
         FROM items
         JOIN groups ON items.group_id = groups.id;
         """
