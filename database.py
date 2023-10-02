@@ -39,7 +39,7 @@ class DatabaseHandler:
 
         self.conn.commit()
 
-    def insert_data_to_items(self, group_id: str, taste: str, nicotine: int, volume: int, price: int, code: int, count: int):
+    def insert_data_to_items(self, group_id: int, taste: str, nicotine: int, volume: int, price: int, code: int, count: int):
         insert_query = """
         INSERT INTO items (group_id, taste, nicotine, volume, price, code, count)
         VALUES (?, ?, ?, ?, ?, ?, ?);
@@ -53,7 +53,7 @@ class DatabaseHandler:
         INSERT INTO groups (name)
         VALUES (?);
         """
-        values = (name)
+        values = (name, )
         self.cursor.execute(insert_query, values)
         self.conn.commit()
 
@@ -75,9 +75,9 @@ class DatabaseHandler:
 
     def retrieve_data_from_items_with_group_name(self):
         retrieve_query = """
-        SELECT items.*, groups.data
+        SELECT items.*, groups.name
         FROM items
-        JOIN groups ON my_table.group_id = groups.name;
+        JOIN groups ON items.group_id = groups.id;
         """
         self.cursor.execute(retrieve_query)
         rows = self.cursor.fetchall()
