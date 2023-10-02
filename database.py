@@ -30,7 +30,7 @@ class DatabaseHandler:
         create_second_table_query = """
                CREATE TABLE IF NOT EXISTS groups (
                    id INTEGER PRIMARY KEY,
-                   data TEXT
+                   name TEXT
                );
                """
 
@@ -63,6 +63,16 @@ class DatabaseHandler:
         update_query = "UPDATE items SET count = ? WHERE id = ?;"
         self.cursor.execute(update_query, (new_value, row_id))
         self.conn.commit()
+
+    def retrieve_data_from_items_with_group_name(self):
+        retrieve_query = """
+        SELECT items.*, groups.data
+        FROM items
+        JOIN groups ON my_table.group_id = groups.name;
+        """
+        self.cursor.execute(retrieve_query)
+        rows = self.cursor.fetchall()
+        return rows
 
     def close_connection(self):
         if self.conn:
