@@ -26,6 +26,12 @@ class DatabaseHandler:
         self.cursor.execute(create_table_query)
         self.conn.commit()
 
+    def retrieve_data(self):
+        retrieve_query = "SELECT * FROM sets;"
+        self.cursor.execute(retrieve_query)
+        rows = self.cursor.fetchall()
+        return rows
+
     def close_connection(self):
         if self.conn:
             self.conn.close()
