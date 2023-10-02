@@ -47,7 +47,10 @@ class DatabaseHandler:
         rows = self.cursor.fetchall()
         return rows
 
-
+    def update_count_value(self, row_id: int, new_value: int):
+        update_query = "UPDATE my_table SET count = ? WHERE id = ?;"
+        self.cursor.execute(update_query, (new_value, row_id))
+        self.conn.commit()
 
     def close_connection(self):
         if self.conn:
