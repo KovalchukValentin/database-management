@@ -35,6 +35,11 @@ class DatabaseHandler:
         self.cursor.execute(insert_query, values)
         self.conn.commit()
 
+    def delete_data(self, row_id):
+        delete_query = "DELETE FROM sets WHERE id = ?;"
+        self.cursor.execute(delete_query, (row_id,))
+        self.conn.commit()
+
     def retrieve_data(self):
         retrieve_query = "SELECT * FROM sets;"
         self.cursor.execute(retrieve_query)
