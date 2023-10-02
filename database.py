@@ -20,18 +20,19 @@ class DatabaseHandler:
             nicotine INTEGER,
             volume INTEGER,
             price INTEGER,
-            code INTEGER UNIQUE
+            code INTEGER UNIQUE,
+            count INTEGER
         );
         """
         self.cursor.execute(create_table_query)
         self.conn.commit()
 
-    def insert_data(self, brand: str, taste: str, nicotine: int, volume: int, price: int, code: int):
+    def insert_data(self, brand: str, taste: str, nicotine: int, volume: int, price: int, code: int, count: int):
         insert_query = """
-        INSERT INTO sets (brand, taste, nicotine, volume, price, code)
-        VALUES (?, ?, ?, ?, ?, ?);
+        INSERT INTO sets (brand, taste, nicotine, volume, price, code, count)
+        VALUES (?, ?, ?, ?, ?, ?, ?);
         """
-        values = (brand, taste, nicotine, volume, price, code)
+        values = (brand, taste, nicotine, volume, price, code, count)
         self.cursor.execute(insert_query, values)
         self.conn.commit()
 
@@ -45,6 +46,8 @@ class DatabaseHandler:
         self.cursor.execute(retrieve_query)
         rows = self.cursor.fetchall()
         return rows
+
+
 
     def close_connection(self):
         if self.conn:
