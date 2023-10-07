@@ -13,7 +13,7 @@ class MainWindow(QDialog):
         super(MainWindow, self).__init__()
         self.setWindowTitle("Database")
         self.db_handler = db_handler
-        loadUi("test.ui", self)
+        loadUi("main.ui", self)
         self.window_add_group = None
 
         self.add_items_btn.clicked.connect(self.press_add_items)
