@@ -30,7 +30,7 @@ class DatabaseHandler:
         create_second_table_query = """
                CREATE TABLE IF NOT EXISTS groups (
                    id INTEGER PRIMARY KEY,
-                   name TEXT
+                   name TEXT UNIQUE
                );
                """
 
