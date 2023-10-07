@@ -15,9 +15,10 @@ class MainWindow(QDialog):
         self.db_handler = db_handler
         loadUi("main.ui", self)
         self.window_add_group = None
+        self.window_add_items = None
 
+        self.add_group_btn.clicked.connect(self.press_add_groups)
         self.add_items_btn.clicked.connect(self.press_add_items)
-
 
         self.model = QStandardItemModel(self)
         self.model.setHorizontalHeaderLabels(['No', 'Group', 'Taste', 'Nicotine', 'Volume', 'Price', 'Code', 'Count'])
@@ -31,21 +32,22 @@ class MainWindow(QDialog):
         for row in data:
             self.model.appendRow([QStandardItem(str(i)) for i in row])
 
-    def press_add_items(self):
+    def press_add_groups(self):
         if self.window_add_group is None:
-            self.window_add_group = AddGroupWindow()
+            self.window_add_group = AddGroupsWindow()
         self.window_add_group.show()
 
+    def press_add_items(self):
+        if self.window_add_items is None:
+            self.window_add_items = AddItemsWindow()
+        self.window_add_items.show()
 
-class AddGroupWindow(QWidget):
-    """
-    This "window" is a QWidget. If it has no parent, it
-    will appear as a free-floating window as we want.
-    """
+
+class AddGroupsWindow(QWidget):
     def __init__(self):
         super().__init__()
         loadUi("add_groups.ui", self)
-        self.setWindowTitle("Add group")
+        self.setWindowTitle("Add groups")
         self.model = QStandardItemModel(self)
         self.model.setHorizontalHeaderLabels(["Name", ])
         self.tableView.setModel(self.model)
@@ -54,7 +56,13 @@ class AddGroupWindow(QWidget):
         self.new_btn.clicked.connect(self.press_new)
 
     def press_new(self):
-        self.model.appendRow([QStandardItem(""),])
+        self.model.appendRow([QStandardItem(""), ])
+
+
+class AddItemsWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Add items")
 
 
 def main():
@@ -63,7 +71,6 @@ def main():
     db_handler.create_tables()
 
     view_all_in_terminal(db_handler)
-
 
     app = QApplication(sys.argv)
     main_window = MainWindow(db_handler)
@@ -77,7 +84,7 @@ def main():
 
     try:
         sys.exit(app.exec_())
-    except:
+    except ValueError:
         db_handler.close_connection()
         print("Exiting")
 
