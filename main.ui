@@ -73,14 +73,7 @@
            <enum>QLayout::SetMinimumSize</enum>
           </property>
           <item>
-           <widget class="QPushButton" name="pushButton_3">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
+           <widget class="QComboBox" name="comboBox"/>
           </item>
          </layout>
         </item>

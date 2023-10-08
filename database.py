@@ -62,13 +62,14 @@ class DatabaseHandler:
         self.conn.commit()
 
     def retrieve_data_from_items(self):
-        retrieve_query = "SELECT name FROM groups;"
+        retrieve_query = "SELECT * FROM items;"
         self.cursor.execute(retrieve_query)
         rows = self.cursor.fetchall()
         return rows
 
     def retrieve_groups_names(self):
-        retrieve_query = "SELECT * FROM items;"
+
+        retrieve_query = "SELECT name FROM groups;"
         self.cursor.execute(retrieve_query)
         rows = self.cursor.fetchall()
         return rows
@@ -87,6 +88,37 @@ class DatabaseHandler:
         self.cursor.execute(retrieve_query)
         rows = self.cursor.fetchall()
         return rows
+
+    def count_rows_from_all_items(self, group_name):
+        retrieve_query = """
+            SELECT COUNT(*)
+            FROM items
+        """
+        self.cursor.execute(retrieve_query, (group_name,))
+        count = self.cursor.fetchall()
+        return count
+
+    def retrieve_data_from_items_with_group_name_where_group(self, group_name):
+        retrieve_query = """
+        SELECT items.id, groups.name, items.taste, items.nicotine, items.volume, items.price, items.code, items.count
+            FROM items
+            JOIN groups ON items.group_id = groups.id
+            WHERE groups.name = ?
+        """
+        self.cursor.execute(retrieve_query, (group_name, ))
+        rows = self.cursor.fetchall()
+        return rows
+
+    def count_rows_from_items_where_group_name(self, group_name):
+        retrieve_query = """
+            SELECT COUNT(*)
+            FROM items
+            JOIN groups ON items.group_id = groups.id
+            WHERE groups.name = ?
+        """
+        self.cursor.execute(retrieve_query, (group_name,))
+        count = self.cursor.fetchall()
+        return count
 
     def close_connection(self):
         if self.conn:

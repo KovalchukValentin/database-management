@@ -23,12 +23,31 @@ class MainWindow(QDialog):
         self.model = QStandardItemModel(self)
         self.model.setHorizontalHeaderLabels(['No', 'Group', 'Taste', 'Nicotine', 'Volume', 'Price', 'Code', 'Count'])
         self.tableView.setModel(self.model)
-        # self.tableView.setEditTriggers(QTableView.NoEditTriggers)
 
-    def view_all_data_from_bd(self):
+        self.comboBox.currentIndexChanged.connect(self.on_combo_selection_change)
+        self.show_left_menu()
 
+    def show_left_menu(self):
+        self.comboBox.addItem("All")
+        for row in self.db_handler.retrieve_groups_names():
+            self.comboBox.addItem(row[0])
+
+    def on_combo_selection_change(self, index):
+        self.remove_rows()
+        if self.comboBox.currentText() == "All":
+            self.view_all_data_from_db()
+        else:
+            self.view_group_items_from_db(self.comboBox.currentText())
+
+    def view_all_data_from_db(self):
         data = self.db_handler.retrieve_data_from_items_with_group_name()
-        # self.tableView.append("Data retrieved from the database:")
+        self.append_rows_to_table_model(data)
+
+    def view_group_items_from_db(self, group_name: str):
+        data = self.db_handler.retrieve_data_from_items_with_group_name_where_group(group_name)
+        self.append_rows_to_table_model(data)
+
+    def append_rows_to_table_model(self, data):
         for row in data:
             self.model.appendRow([QStandardItem(str(i)) for i in row])
 
@@ -41,6 +60,10 @@ class MainWindow(QDialog):
         if self.window_add_items is None:
             self.window_add_items = AddItemsWindow()
         self.window_add_items.show()
+
+    def remove_rows(self):
+        for row in range(self.model.rowCount(), -1, -1):
+            self.model.removeRow(row)
 
 
 class AddGroupsWindow(QWidget):
@@ -100,14 +123,13 @@ def main():
     widget.addWidget(main_window)
     widget.setFixedHeight(720)
     widget.setFixedWidth(1280)
-    main_window.view_all_data_from_bd()
     widget.show()
 
     try:
         sys.exit(app.exec_())
-    except ValueError:
+    except ValueError as err:
         db_handler.close_connection()
-        print("Exiting")
+        print("Exiting" + str(err))
 
 
 def view_all_in_terminal(db_handler: DatabaseHandler):
