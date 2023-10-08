@@ -98,7 +98,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="add_group_btn">
+         <widget class="QPushButton" name="edit_groups_btn">
           <property name="minimumSize">
            <size>
             <width>100</width>
@@ -112,7 +112,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Add group</string>
+           <string>Edit groups</string>
           </property>
          </widget>
         </item>

@@ -17,7 +17,7 @@ class MainWindow(QDialog):
         self.window_add_group = None
         self.window_add_items = None
 
-        self.add_group_btn.clicked.connect(self.press_add_groups)
+        self.edit_groups_btn.clicked.connect(self.press_edit_groups)
         self.add_items_btn.clicked.connect(self.press_add_items)
 
         self.model = QStandardItemModel(self)
@@ -51,9 +51,9 @@ class MainWindow(QDialog):
         for row in data:
             self.model.appendRow([QStandardItem(str(i)) for i in row])
 
-    def press_add_groups(self):
+    def press_edit_groups(self):
         if self.window_add_group is None:
-            self.window_add_group = AddGroupsWindow(self.db_handler)
+            self.window_add_group = EditGroupsWindow(self.db_handler)
         self.window_add_group.show()
 
     def press_add_items(self):
@@ -66,18 +66,24 @@ class MainWindow(QDialog):
             self.model.removeRow(row)
 
 
-class AddGroupsWindow(QWidget):
+class EditGroupsWindow(QWidget):
     def __init__(self, db_handler):
         super().__init__()
         self.db_handler = db_handler
         loadUi("add_groups.ui", self)
-        self.setWindowTitle("Add groups")
+        self.setWindowTitle("Edit groups")
         self.model = QStandardItemModel(self)
         self.model.setHorizontalHeaderLabels(["Name", ])
         self.tableView.setModel(self.model)
 
         self.save_btn.clicked.connect(self.press_save)
         self.new_btn.clicked.connect(self.press_new)
+
+        self.show_groups()
+
+    def show_groups(self):
+        for row in self.db_handler.retrieve_groups_names():
+            self.model.appendRow([QStandardItem(str(i)) for i in row])
 
     def press_new(self):
         self.model.appendRow([QStandardItem(""), ])
