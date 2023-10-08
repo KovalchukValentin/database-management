@@ -62,6 +62,12 @@ class DatabaseHandler:
         self.conn.commit()
 
     def retrieve_data_from_items(self):
+        retrieve_query = "SELECT name FROM groups;"
+        self.cursor.execute(retrieve_query)
+        rows = self.cursor.fetchall()
+        return rows
+
+    def retrieve_groups_names(self):
         retrieve_query = "SELECT * FROM items;"
         self.cursor.execute(retrieve_query)
         rows = self.cursor.fetchall()
