@@ -48,13 +48,12 @@ class DatabaseHandler:
         self.cursor.execute(insert_query, values)
         self.conn.commit()
 
-    def insert_data_to_groups(self, name: str):
+    def insert_data_to_groups(self, values: list):
         insert_query = """
         INSERT INTO groups (name)
         VALUES (?);
         """
-        values = (name, )
-        self.cursor.execute(insert_query, values)
+        self.cursor.executemany(insert_query, values)
         self.conn.commit()
 
     def delete_data_from_items(self, row_id):
