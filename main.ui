@@ -159,7 +159,7 @@
          <enum>QLayout::SetMinimumSize</enum>
         </property>
         <item>
-         <widget class="QPushButton" name="edit_btn_2">
+         <widget class="QPushButton" name="edit_btn">
           <property name="minimumSize">
            <size>
             <width>50</width>
@@ -178,7 +178,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="plus_one_btn_2">
+         <widget class="QPushButton" name="plus_one_btn">
           <property name="minimumSize">
            <size>
             <width>50</width>

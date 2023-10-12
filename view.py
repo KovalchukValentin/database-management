@@ -1,4 +1,5 @@
 import sys
+import pyperclip
 
 from PyQt5.QtGui import QStandardItem, QStandardItemModel
 from PyQt5.QtWidgets import QDialog, QApplication, QWidget
@@ -20,12 +21,32 @@ class MainWindow(QDialog):
         self.edit_groups_btn.clicked.connect(self.press_edit_groups)
         self.add_items_btn.clicked.connect(self.press_add_items)
 
+        self.edit_btn.clicked.connect(self.press_edit_item)
+        self.plus_one_btn.clicked.connect(self.press_plus_one_to_item)
+        self.minus_one_btn.clicked.connect(self.press_minus_one_to_item)
+        self.copy_cod_btn.clicked.connect(self.press_copy_cod_of_item)
+
         self.model = QStandardItemModel(self)
         self.model.setHorizontalHeaderLabels(['No', 'Group', 'Taste', 'Nicotine', 'Volume', 'Price', 'Code', 'Count'])
         self.tableView.setModel(self.model)
 
         self.comboBox.currentIndexChanged.connect(self.on_combo_selection_change)
         self.show_left_menu()
+
+    def press_edit_item(self):
+        pass
+
+    def press_plus_one_to_item(self):
+        pass
+
+    def press_minus_one_to_item(self):
+        pass
+
+    def press_copy_cod_of_item(self):
+        pyperclip.copy(str(self.model.item(self.tableView.selectionModel().currentIndex().row(), 6).text()))
+
+    def get_current_row_data(self) -> list:
+        pass
 
     def show_left_menu(self):
         self.comboBox.addItem("All")
