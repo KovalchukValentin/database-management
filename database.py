@@ -55,9 +55,9 @@ class DatabaseHandler:
         rows = self.cursor.fetchall()
         return rows
 
-    def update_item_count_value(self, row_id: int, new_value: int):
+    def update_item_count_value(self, _id: int, new_value: int):
         update_query = "UPDATE items SET count = ? WHERE id = ?;"
-        self.cursor.execute(update_query, (new_value, row_id))
+        self.cursor.execute(update_query, (new_value, _id))
         self.conn.commit()
 
     def retrieve_data_from_items_with_group_name(self):

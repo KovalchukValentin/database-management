@@ -37,10 +37,22 @@ class MainWindow(QDialog):
         pass
 
     def press_plus_one_to_item(self):
-        pass
+        current_count = int(self.model.item(self.tableView.selectionModel().currentIndex().row(), 7).text())
+        index = int(self.model.item(self.tableView.selectionModel().currentIndex().row(), 0).text())
+        self.db_handler.update_item_count_value(index, current_count + 1)
+
+        item_index = self.model.index(self.tableView.selectionModel().currentIndex().row(), 7)
+        self.model.setData(item_index, current_count + 1)
 
     def press_minus_one_to_item(self):
-        pass
+        current_count = int(self.model.item(self.tableView.selectionModel().currentIndex().row(), 7).text())
+        if current_count <= 0:
+            return
+        index = int(self.model.item(self.tableView.selectionModel().currentIndex().row(), 0).text())
+        self.db_handler.update_item_count_value(index, current_count - 1)
+
+        item_index = self.model.index(self.tableView.selectionModel().currentIndex().row(), 7)
+        self.model.setData(item_index, current_count - 1)
 
     def press_copy_cod_of_item(self):
         pyperclip.copy(str(self.model.item(self.tableView.selectionModel().currentIndex().row(), 6).text()))
