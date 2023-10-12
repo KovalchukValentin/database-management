@@ -37,22 +37,26 @@ class MainWindow(QDialog):
         pass
 
     def press_plus_one_to_item(self):
-        current_count = int(self.model.item(self.tableView.selectionModel().currentIndex().row(), 7).text())
-        index = int(self.model.item(self.tableView.selectionModel().currentIndex().row(), 0).text())
+        current_count, index = self.get_current_count_and_index_from_model()
+        print(current_count, index)
         self.db_handler.update_item_count_value(index, current_count + 1)
 
         item_index = self.model.index(self.tableView.selectionModel().currentIndex().row(), 7)
         self.model.setData(item_index, current_count + 1)
 
     def press_minus_one_to_item(self):
-        current_count = int(self.model.item(self.tableView.selectionModel().currentIndex().row(), 7).text())
+        current_count, index = self.get_current_count_and_index_from_model()
         if current_count <= 0:
             return
-        index = int(self.model.item(self.tableView.selectionModel().currentIndex().row(), 0).text())
+
         self.db_handler.update_item_count_value(index, current_count - 1)
 
         item_index = self.model.index(self.tableView.selectionModel().currentIndex().row(), 7)
         self.model.setData(item_index, current_count - 1)
+
+    def get_current_count_and_index_from_model(self):
+        return int(self.model.item(self.tableView.selectionModel().currentIndex().row(), 7).text()), \
+               int(self.model.item(self.tableView.selectionModel().currentIndex().row(), 0).text())
 
     def press_copy_cod_of_item(self):
         pyperclip.copy(str(self.model.item(self.tableView.selectionModel().currentIndex().row(), 6).text()))
@@ -163,13 +167,15 @@ class ItemWindow(QWidget):
         self.cansel_btn.clicked.connect(self.press_cansel)
         self.save_btn.clicked.connect(self.press_save)
 
+        self.init_group_comboBox()
+
     def press_save(self):
         self.get_data_from_inputs()
 
     def press_cansel(self):
         pass
 
-    def get_data_from_inputs(self):
+    def get_data_from_inputs(self) -> tuple:
         result = (self.group_edit.text(),
         self.taste_edit.text(),
         self.nicotine_spinBox.value(),
@@ -178,6 +184,21 @@ class ItemWindow(QWidget):
         self.code_edit.text(),
         self.count_spinBox.value())
         return result
+
+    def init_group_comboBox(self):
+        self.group_comboBox.currentIndexChanged.connect(self.on_combo_selection_change)
+        self.add_group_names_to_comboBox()
+
+    def add_group_names_to_comboBox(self):
+        self.group_comboBox.addItem("Select group")
+        for row in self.db_handler.retrieve_groups_names():
+            self.group_comboBox.addItem(row[0])
+
+    def on_combo_selection_change(self, index):
+        if not self.group_comboBox.currentIndex() == 0:
+            self.group_edit.setText(self.group_comboBox.currentText())
+            self.group_comboBox.setCurrentIndex(0)
+
 
 
 
