@@ -1,7 +1,7 @@
 import sys
 import pyperclip
 
-from PyQt5.QtGui import QStandardItem, QStandardItemModel
+from PyQt5.QtGui import QStandardItem, QStandardItemModel, QIntValidator
 from PyQt5.QtWidgets import QDialog, QApplication, QWidget
 from PyQt5 import QtWidgets
 
@@ -91,7 +91,7 @@ class MainWindow(QDialog):
 
     def press_add_items(self):
         if self.window_add_items is None:
-            self.window_add_items = AddItemsWindow()
+            self.window_add_items = ItemWindow()
         self.window_add_items.show()
 
     def remove_rows(self):
@@ -151,10 +151,11 @@ class EditGroupsWindow(QWidget):
             self.model.removeRow(row)
 
 
-class AddItemsWindow(QWidget):
-    def __init__(self):
+class ItemWindow(QWidget):
+    def __init__(self, data=None):
         super().__init__()
         self.setWindowTitle("Add items")
+        loadUi("item.ui", self)
 
 
 def main():

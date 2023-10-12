@@ -39,7 +39,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="group_edit"/>
+       <widget class="QLineEdit" name="group_edit">
+        <property name="maxLength">
+         <number>45</number>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QComboBox" name="group_comboBox"/>
@@ -62,7 +66,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="taste_edit"/>
+       <widget class="QLineEdit" name="taste_edit">
+        <property name="maxLength">
+         <number>45</number>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -102,7 +110,14 @@
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="volume_spinBox"/>
+       <widget class="QSpinBox" name="volume_spinBox">
+        <property name="maximum">
+         <number>999</number>
+        </property>
+        <property name="singleStep">
+         <number>1</number>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -122,7 +137,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="price_spinBox"/>
+       <widget class="QDoubleSpinBox" name="price_doubleSpinBox">
+        <property name="maximum">
+         <double>999999.989999999990687</double>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -142,7 +161,14 @@
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="code_spinBox"/>
+       <widget class="QLineEdit" name="code_lineEdit">
+        <property name="inputMethodHints">
+         <set>Qt::ImhHiddenText</set>
+        </property>
+        <property name="maxLength">
+         <number>45</number>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -162,7 +188,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="count_spinBox"/>
+       <widget class="QSpinBox" name="count_spinBox">
+        <property name="maximum">
+         <number>999999999</number>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
