@@ -161,7 +161,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="code_lineEdit">
+       <widget class="QLineEdit" name="code_edit">
         <property name="inputMethodHints">
          <set>Qt::ImhHiddenText</set>
         </property>
