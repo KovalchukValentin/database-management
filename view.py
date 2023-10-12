@@ -78,6 +78,7 @@ class EditGroupsWindow(QWidget):
 
         self.save_btn.clicked.connect(self.press_save)
         self.new_btn.clicked.connect(self.press_new)
+        self.delete_btn.clicked.connect(self.press_delete)
 
         self.show_groups()
 
@@ -87,6 +88,14 @@ class EditGroupsWindow(QWidget):
 
     def press_new(self):
         self.model.appendRow([QStandardItem(""), ])
+
+    def press_delete(self):
+        current_index = self.tableView.currentIndex()
+
+        # Check if an item is selected
+        if current_index.isValid():
+            # Remove the row corresponding to the selected item
+            self.model.removeRow(current_index.row())
 
     def press_save(self):
         data = []

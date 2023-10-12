@@ -15,45 +15,27 @@ class DatabaseHandler:
         create_table_query = """
         CREATE TABLE IF NOT EXISTS items (
             id INTEGER PRIMARY KEY,
-            group_id INTEGER,
+            group_name TEXT,
             taste TEXT,
             nicotine INTEGER,
             volume INTEGER,
             price INTEGER,
             code INTEGER UNIQUE,
-            count INTEGER,
-            FOREIGN KEY (group_id) REFERENCES groups(id)
-            
+            count INTEGER
         );
         """
 
-        create_second_table_query = """
-               CREATE TABLE IF NOT EXISTS groups (
-                   id INTEGER PRIMARY KEY,
-                   name TEXT UNIQUE
-               );
-               """
-
-        self.cursor.execute(create_second_table_query)
         self.cursor.execute(create_table_query)
 
         self.conn.commit()
 
-    def insert_data_to_items(self, group_id: int, taste: str, nicotine: int, volume: int, price: int, code: int, count: int):
+    def insert_data_to_items(self, group_name: str, taste: str, nicotine: int, volume: int, price: int, code: int, count: int):
         insert_query = """
-        INSERT INTO items (group_id, taste, nicotine, volume, price, code, count)
+        INSERT INTO items (group_name, taste, nicotine, volume, price, code, count)
         VALUES (?, ?, ?, ?, ?, ?, ?);
         """
-        values = (group_id, taste, nicotine, volume, price, code, count)
+        values = (group_name, taste, nicotine, volume, price, code, count)
         self.cursor.execute(insert_query, values)
-        self.conn.commit()
-
-    def insert_data_to_groups(self, values: list):
-        insert_query = """
-        INSERT INTO groups (name)
-        VALUES (?);
-        """
-        self.cursor.executemany(insert_query, values)
         self.conn.commit()
 
     def delete_data_from_items(self, row_id):
@@ -68,8 +50,7 @@ class DatabaseHandler:
         return rows
 
     def retrieve_groups_names(self):
-
-        retrieve_query = "SELECT name FROM groups;"
+        retrieve_query = "SELECT DISTINCT group_name FROM items ORDER BY count DESC;"
         self.cursor.execute(retrieve_query)
         rows = self.cursor.fetchall()
         return rows
@@ -81,9 +62,9 @@ class DatabaseHandler:
 
     def retrieve_data_from_items_with_group_name(self):
         retrieve_query = """
-        SELECT items.id, groups.name, items.taste, items.nicotine, items.volume, items.price, items.code, items.count
+        SELECT *
         FROM items
-        JOIN groups ON items.group_id = groups.id;
+        ORDER BY count DESC;
         """
         self.cursor.execute(retrieve_query)
         rows = self.cursor.fetchall()
@@ -92,7 +73,7 @@ class DatabaseHandler:
     def count_rows_from_all_items(self, group_name):
         retrieve_query = """
             SELECT COUNT(*)
-            FROM items
+            FROM items 
         """
         self.cursor.execute(retrieve_query, (group_name,))
         count = self.cursor.fetchall()
@@ -100,10 +81,10 @@ class DatabaseHandler:
 
     def retrieve_data_from_items_with_group_name_where_group(self, group_name):
         retrieve_query = """
-        SELECT items.id, groups.name, items.taste, items.nicotine, items.volume, items.price, items.code, items.count
+        SELECT *
             FROM items
-            JOIN groups ON items.group_id = groups.id
-            WHERE groups.name = ?
+            WHERE group_name = ?
+            ORDER BY count DESC;
         """
         self.cursor.execute(retrieve_query, (group_name, ))
         rows = self.cursor.fetchall()
@@ -113,8 +94,7 @@ class DatabaseHandler:
         retrieve_query = """
             SELECT COUNT(*)
             FROM items
-            JOIN groups ON items.group_id = groups.id
-            WHERE groups.name = ?
+            WHERE group_name = ?
         """
         self.cursor.execute(retrieve_query, (group_name,))
         count = self.cursor.fetchall()
