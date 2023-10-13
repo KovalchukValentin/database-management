@@ -121,19 +121,29 @@ class ItemWindow(QWidget):
         if self.item_data.isNew():
             self.db_handler.insert_item_data(self.item_data)
         else:
-            self.db_handler.insert_item_data(self.item_data)
+            self.db_handler.update_item_data(self.item_data)
+        self.clear()
+
+    def clear(self):
+        self.group_edit.setText("")
+        self.taste_edit.setText("")
+        self.nicotine_spinBox.setValue(0)
+        self.volume_spinBox.setValue(0)
+        self.price_doubleSpinBox.setValue(0)
+        self.code_edit.setText("")
+        self.count_spinBox.setValue(0)
 
     def press_cansel(self):
         pass
 
     def change_item_data_from_inputs(self):
-        self.item_data.group_name = self.group_edit.text(),
-        self.item_data.taste = self.taste_edit.text(),
-        self.item_data.nicotine = self.nicotine_spinBox.value(),
-        self.item_data.volume = self.volume_spinBox.value(),
-        self.item_data.price = self.price_doubleSpinBox.value(),
-        self.item_data.code = self.code_edit.text(),
-        self.item_data.count = self.count_spinBox.value()
+        self.item_data.setData(group_name=self.group_edit.text(),
+                               taste=self.taste_edit.text(),
+                               nicotine=self.nicotine_spinBox.value(),
+                               volume=self.volume_spinBox.value(),
+                               price=self.price_doubleSpinBox.value(),
+                               code=self.code_edit.text(),
+                               count=self.count_spinBox.value())
 
     def init_group_comboBox(self):
         self.group_comboBox.currentIndexChanged.connect(self.on_combo_selection_change)

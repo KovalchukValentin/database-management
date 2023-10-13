@@ -53,8 +53,8 @@ class DatabaseHandler:
         update_query = "UPDATE items " \
                        "SET group_name = ?, taste = ?, nicotine = ?, volume = ?, price = ?, code = ?, count = ? " \
                        "WHERE id = ?;"
-        self.cursor.execute(update_query, data.group_name, data.taste, data.nicotine,
-                            data.volume, data.price, data.code, data.count, data.id_)
+        values = (data.group_name, data.taste, data.nicotine, data.volume, data.price, data.code, data.count, data.id_)
+        self.cursor.execute(update_query, values)
         self.conn.commit()
 
     def delete_data_from_items(self, row_id):
