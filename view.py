@@ -20,7 +20,6 @@ class MainWindow(QDialog):
         self.window_add_group = None
         self.window_add_items = None
 
-        # self.edit_groups_btn.clicked.connect(self.press_edit_groups)
         self.add_items_btn.clicked.connect(self.press_add_items)
 
         self.edit_btn.clicked.connect(self.press_edit_item)
@@ -90,11 +89,6 @@ class MainWindow(QDialog):
         for row in data:
             self.model.appendRow([QStandardItem(str(i)) for i in row])
 
-    # def press_edit_groups(self):
-    #     if self.window_add_group is None:
-    #         self.window_add_group = EditGroupsWindow(self.db_handler)
-    #     self.window_add_group.show()
-
     def press_add_items(self):
         if self.window_add_items is None:
             self.window_add_items = ItemWindow(self.db_handler)
@@ -103,58 +97,6 @@ class MainWindow(QDialog):
     def remove_rows(self):
         for row in range(self.model.rowCount(), -1, -1):
             self.model.removeRow(row)
-
-
-# class EditGroupsWindow(QWidget):
-#     def __init__(self, db_handler):
-#         super().__init__()
-#         self.db_handler = db_handler
-#         loadUi("add_groups.ui", self)
-#         self.setWindowTitle("Edit groups")
-#         self.model = QStandardItemModel(self)
-#         self.model.setHorizontalHeaderLabels(["Name", ])
-#         self.tableView.setModel(self.model)
-#
-#         self.save_btn.clicked.connect(self.press_save)
-#         self.new_btn.clicked.connect(self.press_new)
-#         self.delete_btn.clicked.connect(self.press_delete)
-#
-#         self.show_groups()
-#
-#     def show_groups(self):
-#         for row in self.db_handler.retrieve_groups_names():
-#             self.model.appendRow([QStandardItem(str(i)) for i in row])
-#
-#     # def press_new(self):
-#     #     self.model.appendRow([QStandardItem(""), ])
-#
-#     # def press_delete(self):
-#     #     current_index = self.tableView.currentIndex()
-#     #
-#     #     # Check if an item is selected
-#     #     if current_index.isValid():
-#     #         # Remove the row corresponding to the selected item
-#     #         self.model.removeRow(current_index.row())
-#
-#     # def press_save(self):
-#     #     data = []
-#     #
-#     #     for row in range(self.model.rowCount()):
-#     #         item = self.model.item(row, 0)
-#     #         if item is not None:
-#     #             print(item.text())
-#     #             data.append([item.text()])
-#     #         else:
-#     #             data.append(None)
-#     #
-#     #     if data:
-#     #         self.db_handler.insert_data_to_groups(data)
-#     #     self.remove_rows()
-#     #     self.close()
-#
-#     def remove_rows(self):
-#         for row in range(self.model.rowCount(), -1, -1):
-#             self.model.removeRow(row)
 
 
 class ItemWindow(QWidget):
