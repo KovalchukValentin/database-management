@@ -158,10 +158,11 @@ class MainWindow(QDialog):
 
 
 class ItemWindow(QWidget):
-    def __init__(self, db_handler, data=None):
+    def __init__(self, db_handler, item_data=ItemData()):
         super().__init__()
         self.db_handler = db_handler
-        self.data = data
+        self.item_data = item_data
+        self.isEditor = self.item_data.isNew()
 
         self.setWindowTitle("Item")
         loadUi("item.ui", self)
@@ -172,22 +173,25 @@ class ItemWindow(QWidget):
         self.init_group_comboBox()
 
     def press_save(self):
-        data = self.get_item_data_from_inputs()
-        if data.isValid():
-            self.db_handler.insert_item_data(data)
+        self.change_item_data_from_inputs()
+        if not self.item_data.isValid():
+            return
+        if self.item_data.isNew():
+            self.db_handler.insert_item_data(self.item_data)
+        else:
+            self.db_handler.insert_item_data(self.item_data)
 
     def press_cansel(self):
         pass
 
-    def get_item_data_from_inputs(self) -> ItemData:
-        result = ItemData(self.group_edit.text(),
-        self.taste_edit.text(),
-        self.nicotine_spinBox.value(),
-        self.volume_spinBox.value(),
-        self.price_doubleSpinBox.value(),
-        self.code_edit.text(),
-        self.count_spinBox.value())
-        return result
+    def change_item_data_from_inputs(self):
+        self.item_data.group_name = self.group_edit.text(),
+        self.item_data.taste = self.taste_edit.text(),
+        self.item_data.nicotine = self.nicotine_spinBox.value(),
+        self.item_data.volume = self.volume_spinBox.value(),
+        self.item_data.price = self.price_doubleSpinBox.value(),
+        self.item_data.code = self.code_edit.text(),
+        self.item_data.count = self.count_spinBox.value()
 
     def init_group_comboBox(self):
         self.group_comboBox.currentIndexChanged.connect(self.on_combo_selection_change)

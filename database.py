@@ -49,6 +49,14 @@ class DatabaseHandler:
         self.cursor.execute(insert_query, values)
         self.conn.commit()
 
+    def update_item_data(self, data: ItemData):
+        update_query = "UPDATE items " \
+                       "SET group_name = ?, taste = ?, nicotine = ?, volume = ?, price = ?, code = ?, count = ? " \
+                       "WHERE id = ?;"
+        self.cursor.execute(update_query, data.group_name, data.taste, data.nicotine,
+                            data.volume, data.price, data.code, data.count, data.id_)
+        self.conn.commit()
+
     def delete_data_from_items(self, row_id):
         delete_query = "DELETE FROM items WHERE id = ?;"
         self.cursor.execute(delete_query, (row_id,))
