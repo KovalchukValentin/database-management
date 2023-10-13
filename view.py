@@ -35,7 +35,9 @@ class MainWindow(QDialog):
         self.show_left_menu()
 
     def press_edit_item(self):
-        pass
+        if self.window_add_items is None:
+            self.window_add_items = ItemWindow(db_handler=self.db_handler, item_data=self.get_current_row_item_data())
+        self.window_add_items.show()
 
     def press_plus_one_to_item(self):
         current_count, index = self.get_current_count_and_index_from_model()
@@ -62,8 +64,16 @@ class MainWindow(QDialog):
     def press_copy_cod_of_item(self):
         pyperclip.copy(str(self.model.item(self.tableView.selectionModel().currentIndex().row(), 6).text()))
 
-    def get_current_row_data(self) -> list:
-        pass
+    def get_current_row_item_data(self) -> ItemData:
+        id_ = self.model.item(self.tableView.selectionModel().currentIndex().row(), 0).text()
+        group_name = self.model.item(self.tableView.selectionModel().currentIndex().row(), 1).text()
+        taste = self.model.item(self.tableView.selectionModel().currentIndex().row(), 2).text()
+        nicotine = int(self.model.item(self.tableView.selectionModel().currentIndex().row(), 3).text())
+        volume = int(self.model.item(self.tableView.selectionModel().currentIndex().row(), 4).text())
+        price = float(self.model.item(self.tableView.selectionModel().currentIndex().row(), 5).text())
+        code = self.model.item(self.tableView.selectionModel().currentIndex().row(), 6).text()
+        count = int(self.model.item(self.tableView.selectionModel().currentIndex().row(), 7).text())
+        return ItemData(id_, group_name, taste, nicotine, volume, price, code, count)
 
     def show_left_menu(self):
         self.comboBox.addItem("All")
@@ -102,17 +112,19 @@ class MainWindow(QDialog):
 class ItemWindow(QWidget):
     def __init__(self, db_handler, item_data=ItemData()):
         super().__init__()
-        self.db_handler = db_handler
-        self.item_data = item_data
-        self.isEditor = self.item_data.isNew()
-
         self.setWindowTitle("Item")
         loadUi("item.ui", self)
+
+        self.db_handler = db_handler
+        self.item_data = item_data
 
         self.cansel_btn.clicked.connect(self.press_cansel)
         self.save_btn.clicked.connect(self.press_save)
 
         self.init_group_comboBox()
+
+        if not self.item_data.isNew():
+            self.show_data()
 
     def press_save(self):
         self.change_item_data_from_inputs()
@@ -158,6 +170,15 @@ class ItemWindow(QWidget):
         if not self.group_comboBox.currentIndex() == 0:
             self.group_edit.setText(self.group_comboBox.currentText())
             self.group_comboBox.setCurrentIndex(0)
+
+    def show_data(self):
+        self.group_edit.setText(self.item_data.group_name)
+        self.taste_edit.setText(self.item_data.taste)
+        self.nicotine_spinBox.setValue(self.item_data.nicotine)
+        self.volume_spinBox.setValue(self.item_data.volume)
+        self.price_doubleSpinBox.setValue(self.item_data.price)
+        self.code_edit.setText(self.item_data.code)
+        self.count_spinBox.setValue(self.item_data.count)
 
 
 def main():
