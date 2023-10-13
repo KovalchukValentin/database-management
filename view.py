@@ -8,6 +8,8 @@ from PyQt5 import QtWidgets
 from database import DatabaseHandler
 from PyQt5.uic import loadUi
 
+from services import ItemData
+
 
 class MainWindow(QDialog):
     def __init__(self, db_handler):
@@ -170,13 +172,15 @@ class ItemWindow(QWidget):
         self.init_group_comboBox()
 
     def press_save(self):
-        self.get_data_from_inputs()
+        data = self.get_item_data_from_inputs()
+        if data.isValid():
+            self.db_handler.insert_item_data(data)
 
     def press_cansel(self):
         pass
 
-    def get_data_from_inputs(self) -> tuple:
-        result = (self.group_edit.text(),
+    def get_item_data_from_inputs(self) -> ItemData:
+        result = ItemData(self.group_edit.text(),
         self.taste_edit.text(),
         self.nicotine_spinBox.value(),
         self.volume_spinBox.value(),
@@ -198,9 +202,6 @@ class ItemWindow(QWidget):
         if not self.group_comboBox.currentIndex() == 0:
             self.group_edit.setText(self.group_comboBox.currentText())
             self.group_comboBox.setCurrentIndex(0)
-
-
-
 
 
 def main():

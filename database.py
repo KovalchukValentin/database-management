@@ -1,5 +1,7 @@
 import sqlite3
 
+from services import ItemData
+
 
 class DatabaseHandler:
     def __init__(self, db_name):
@@ -35,6 +37,15 @@ class DatabaseHandler:
         VALUES (?, ?, ?, ?, ?, ?, ?);
         """
         values = (group_name, taste, nicotine, volume, price, code, count)
+        self.cursor.execute(insert_query, values)
+        self.conn.commit()
+
+    def insert_item_data(self, data: ItemData):
+        insert_query = """
+        INSERT INTO items (group_name, taste, nicotine, volume, price, code, count)
+        VALUES (?, ?, ?, ?, ?, ?, ?);
+        """
+        values = (data.group_name, data.taste, data.nicotine, data.volume, data.price, data.code, data.count)
         self.cursor.execute(insert_query, values)
         self.conn.commit()
 
