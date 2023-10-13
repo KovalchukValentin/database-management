@@ -113,25 +113,6 @@
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QPushButton" name="edit_groups_btn">
-          <property name="minimumSize">
-           <size>
-            <width>100</width>
-            <height>50</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>100</width>
-            <height>50</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>Edit groups</string>
-          </property>
-         </widget>
-        </item>
        </layout>
       </item>
      </layout>
@@ -166,6 +147,9 @@
         </property>
         <property name="gridStyle">
          <enum>Qt::SolidLine</enum>
+        </property>
+        <property name="sortingEnabled">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

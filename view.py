@@ -2,7 +2,7 @@ import sys
 import pyperclip
 
 from PyQt5.QtGui import QStandardItem, QStandardItemModel, QIntValidator
-from PyQt5.QtWidgets import QDialog, QApplication, QWidget
+from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QHeaderView
 from PyQt5 import QtWidgets
 
 from database import DatabaseHandler
@@ -26,18 +26,40 @@ class MainWindow(QDialog):
         self.plus_one_btn.clicked.connect(self.press_plus_one_to_item)
         self.minus_one_btn.clicked.connect(self.press_minus_one_to_item)
         self.copy_cod_btn.clicked.connect(self.press_copy_cod_of_item)
+        self.disable_btns()
 
-        self.model = QStandardItemModel(self)
-        self.model.setHorizontalHeaderLabels(['No', 'Group', 'Taste', 'Nicotine', 'Volume', 'Price', 'Code', 'Count'])
-        self.tableView.setModel(self.model)
+        self.init_tableview()
 
         self.comboBox.currentIndexChanged.connect(self.on_combo_selection_change)
         self.show_left_menu()
+
+    def init_tableview(self):
+        self.model = QStandardItemModel(self)
+        self.model.setHorizontalHeaderLabels(['No', 'Group', 'Taste', 'Nicotine', 'Volume', 'Price', 'Code', 'Count'])
+        self.tableView.setModel(self.model)
+        selection_model = self.tableView.selectionModel()
+        selection_model.selectionChanged.connect(self.selection_changed)
+
+    def selection_changed(self, selected, deselected):
+        self.enable_btns()
+
+    def disable_btns(self):
+        self.edit_btn.setEnabled(False)
+        self.plus_one_btn.setEnabled(False)
+        self.minus_one_btn.setEnabled(False)
+        self.copy_cod_btn.setEnabled(False)
+
+    def enable_btns(self):
+        self.edit_btn.setEnabled(True)
+        self.plus_one_btn.setEnabled(True)
+        self.minus_one_btn.setEnabled(True)
+        self.copy_cod_btn.setEnabled(True)
 
     def press_edit_item(self):
         if self.window_add_items is None:
             self.window_add_items = ItemWindow(db_handler=self.db_handler, item_data=self.get_current_row_item_data())
         self.window_add_items.show()
+        self.window_add_items.closeEvent = self.window_add_items_closed
 
     def press_plus_one_to_item(self):
         current_count, index = self.get_current_count_and_index_from_model()
@@ -81,11 +103,7 @@ class MainWindow(QDialog):
             self.comboBox.addItem(row[0])
 
     def on_combo_selection_change(self, index):
-        self.remove_rows()
-        if self.comboBox.currentText() == "All":
-            self.view_all_data_from_db()
-        else:
-            self.view_group_items_from_db(self.comboBox.currentText())
+        self.update_table()
 
     def view_all_data_from_db(self):
         data = self.db_handler.retrieve_data_from_items_with_group_name()
@@ -103,10 +121,25 @@ class MainWindow(QDialog):
         if self.window_add_items is None:
             self.window_add_items = ItemWindow(self.db_handler)
         self.window_add_items.show()
+        self.window_add_items.closeEvent = self.window_add_items_closed
 
     def remove_rows(self):
         for row in range(self.model.rowCount(), -1, -1):
             self.model.removeRow(row)
+
+    def window_add_items_closed(self, event):
+        self.window_add_items = None
+        self.update_table()
+        event.accept()
+
+    def update_table(self):
+        self.remove_rows()
+        if self.comboBox.currentIndex() == 0:
+            self.view_all_data_from_db()
+        else:
+            self.view_group_items_from_db(self.comboBox.currentText())
+        self.tableView.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.disable_btns()
 
 
 class ItemWindow(QWidget):
@@ -132,9 +165,10 @@ class ItemWindow(QWidget):
             return
         if self.item_data.isNew():
             self.db_handler.insert_item_data(self.item_data)
+            self.clear()
         else:
             self.db_handler.update_item_data(self.item_data)
-        self.clear()
+            self.close()
 
     def clear(self):
         self.group_edit.setText("")
@@ -146,7 +180,7 @@ class ItemWindow(QWidget):
         self.count_spinBox.setValue(0)
 
     def press_cansel(self):
-        pass
+        self.close()
 
     def change_item_data_from_inputs(self):
         self.item_data.setData(group_name=self.group_edit.text(),
@@ -186,8 +220,6 @@ def main():
     db_handler.connect()
     db_handler.create_tables()
 
-    view_all_in_terminal(db_handler)
-
     app = QApplication(sys.argv)
     main_window = MainWindow(db_handler)
 
@@ -202,10 +234,3 @@ def main():
     except ValueError as err:
         db_handler.close_connection()
         print("Exiting" + str(err))
-
-
-def view_all_in_terminal(db_handler: DatabaseHandler):
-    data = db_handler.retrieve_data_from_items_with_group_name()
-    print("Data retrieved from the database:")
-    for row in data:
-        print(row)
