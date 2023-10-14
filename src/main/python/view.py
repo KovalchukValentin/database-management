@@ -4,6 +4,7 @@ import pyperclip
 from PyQt5.QtGui import QStandardItem, QStandardItemModel, QIntValidator
 from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QHeaderView
 from PyQt5 import QtWidgets
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 from database import DatabaseHandler
 from PyQt5.uic import loadUi
@@ -12,11 +13,13 @@ from services import ItemData
 
 
 class MainWindow(QDialog):
-    def __init__(self, db_handler):
+    def __init__(self, appctxt, db_handler):
         super(MainWindow, self).__init__()
         self.setWindowTitle("Database")
         self.db_handler = db_handler
-        loadUi("main.ui", self)
+        loadUi(appctxt.get_resource("main.ui"), self)
+        self.appctxt = appctxt
+
         self.window_add_group = None
         self.window_add_items = None
 
@@ -57,7 +60,9 @@ class MainWindow(QDialog):
 
     def press_edit_item(self):
         if self.window_add_items is None:
-            self.window_add_items = ItemWindow(db_handler=self.db_handler, item_data=self.get_current_row_item_data())
+            self.window_add_items = ItemWindow(appctxt=self.appctxt,
+                                               db_handler=self.db_handler,
+                                               item_data=self.get_current_row_item_data())
         self.window_add_items.show()
         self.window_add_items.closeEvent = self.window_add_items_closed
 
@@ -119,7 +124,7 @@ class MainWindow(QDialog):
 
     def press_add_items(self):
         if self.window_add_items is None:
-            self.window_add_items = ItemWindow(self.db_handler)
+            self.window_add_items = ItemWindow(appctxt=self.appctxt, db_handler=self.db_handler)
         self.window_add_items.show()
         self.window_add_items.closeEvent = self.window_add_items_closed
 
@@ -143,10 +148,10 @@ class MainWindow(QDialog):
 
 
 class ItemWindow(QWidget):
-    def __init__(self, db_handler, item_data=ItemData()):
+    def __init__(self, appctxt, db_handler, item_data=ItemData()):
         super().__init__()
         self.setWindowTitle("Item")
-        loadUi("item.ui", self)
+        loadUi(appctxt.get_resource("item.ui"), self)
 
         self.db_handler = db_handler
         self.item_data = item_data
@@ -220,8 +225,8 @@ def main():
     db_handler.connect()
     db_handler.create_tables()
 
-    app = QApplication(sys.argv)
-    main_window = MainWindow(db_handler)
+    appctxt = ApplicationContext()
+    main_window = MainWindow(appctxt, db_handler)
 
     widget = QtWidgets.QStackedWidget()
     widget.addWidget(main_window)
@@ -230,7 +235,7 @@ def main():
     widget.show()
 
     try:
-        sys.exit(app.exec_())
+        sys.exit(appctxt.app.exec_())
     except ValueError as err:
         db_handler.close_connection()
         print("Exiting" + str(err))
