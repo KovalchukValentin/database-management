@@ -1,5 +1,7 @@
 import shutil
 import sys
+import webbrowser
+
 import pyperclip
 from PyQt5.QtCore import Qt
 
@@ -18,6 +20,7 @@ class MainWindow(QDialog):
     def __init__(self, appctxt, db_handler):
         super(MainWindow, self).__init__()
         loadUi(appctxt.get_resource("main.ui"), self)
+        self.setWindowTitle("")
         self.db_handler = db_handler
         self.filter_manager = FilterManager()
         self.appctxt = appctxt
@@ -33,6 +36,7 @@ class MainWindow(QDialog):
         self.show_group_name_comboBox()
 
     def init_menu_btns(self):
+        self.github_btn.clicked.connect(lambda: webbrowser.open("https://github.com/KovalchukValentin"))
         self.in_stock_checkBox.stateChanged.connect(self.on_in_stock_checkBox_state_change)
         self.add_items_btn.clicked.connect(self.press_add_items)
         self.import_csv_btn.clicked.connect(self.press_import_csv)
@@ -312,6 +316,7 @@ def main():
     widget.addWidget(main_window)
     widget.setFixedHeight(720)
     widget.setFixedWidth(1280)
+    widget.setWindowTitle("Developed By @Valent_nk")
     widget.show()
 
     try:
