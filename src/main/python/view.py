@@ -1,6 +1,7 @@
 import shutil
 import sys
 import pyperclip
+from PyQt5.QtCore import Qt
 
 from PyQt5.QtGui import QStandardItem, QStandardItemModel, QIntValidator
 from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QHeaderView, QFileDialog
@@ -10,7 +11,7 @@ from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from database import DatabaseHandler
 from PyQt5.uic import loadUi
 
-from services import ItemData, path_csv_to_items_data
+from services import ItemData, path_csv_to_items_data, FilterManager
 
 
 class MainWindow(QDialog):
@@ -18,6 +19,7 @@ class MainWindow(QDialog):
         super(MainWindow, self).__init__()
         loadUi(appctxt.get_resource("main.ui"), self)
         self.db_handler = db_handler
+        self.filter_manager = FilterManager()
         self.appctxt = appctxt
 
         self.window_import_csv = None
@@ -27,10 +29,11 @@ class MainWindow(QDialog):
         self.init_tableview()
         self.init_under_tableview_btns()
 
-        self.comboBox.currentIndexChanged.connect(self.on_combo_selection_change)
-        self.show_left_menu()
+        self.group_name_comboBox.currentIndexChanged.connect(self.on_combo_selection_change)
+        self.show_group_name_comboBox()
 
     def init_menu_btns(self):
+        self.in_stock_checkBox.stateChanged.connect(self.on_in_stock_checkBox_state_change)
         self.add_items_btn.clicked.connect(self.press_add_items)
         self.import_csv_btn.clicked.connect(self.press_import_csv)
 
@@ -73,7 +76,6 @@ class MainWindow(QDialog):
 
     def press_plus_one_to_item(self):
         current_count, index = self.get_current_count_and_index_from_model()
-        print(current_count, index)
         self.db_handler.update_item_count_value(index, current_count + 1)
 
         item_index = self.model.index(self.tableView.selectionModel().currentIndex().row(), 7)
@@ -107,12 +109,28 @@ class MainWindow(QDialog):
         count = int(self.model.item(self.tableView.selectionModel().currentIndex().row(), 7).text())
         return ItemData(id_, group_name, taste, nicotine, volume, price, code, count)
 
-    def show_left_menu(self):
-        self.comboBox.addItem("All")
+    def update_group_name_comboBox(self):
+        self.comboBox.clear()
+        self.show_group_name_comboBox()
+
+    def show_group_name_comboBox(self):
+        self.group_name_comboBox.addItem("All")
+        self.filter_manager.group_name = None
         for row in self.db_handler.retrieve_groups_names():
-            self.comboBox.addItem(row[0])
+            self.group_name_comboBox.addItem(row[0])
 
     def on_combo_selection_change(self, index):
+        if index == 0:
+            self.filter_manager.group_name = None
+        else:
+            self.filter_manager.group_name = self.group_name_comboBox.itemText(index)
+        self.update_table()
+
+    def on_in_stock_checkBox_state_change(self, state):
+        if state == Qt.Checked:
+            self.filter_manager.in_stock = True
+        else:
+            self.filter_manager.in_stock = False
         self.update_table()
 
     def view_all_data_from_db(self):
@@ -144,12 +162,16 @@ class MainWindow(QDialog):
 
     def update_table(self):
         self.remove_rows()
-        if self.comboBox.currentIndex() == 0:
-            self.view_all_data_from_db()
-        else:
-            self.view_group_items_from_db(self.comboBox.currentText())
+        self.show_data_in_table()
+        # if self.comboBox.currentIndex() == 0:
+        #     self.view_all_data_from_db()
+        # else:
+        #     self.view_group_items_from_db(self.comboBox.currentText())
         self.tableView.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         self.disable_btns()
+
+    def show_data_in_table(self):
+        self.append_rows_to_table_model(self.db_handler.retrieve_items_where_filter_manager(self.filter_manager))
 
     def press_import_csv(self):
         if self.window_import_csv is None:
@@ -187,6 +209,7 @@ class ItemWindow(QWidget):
         if self.item_data.isNew():
             self.db_handler.insert_item_data(self.item_data)
             self.clear()
+            self.update_group_comboBox()
         else:
             self.db_handler.update_item_data(self.item_data)
             self.close()
@@ -216,10 +239,16 @@ class ItemWindow(QWidget):
         self.group_comboBox.currentIndexChanged.connect(self.on_combo_selection_change)
         self.add_group_names_to_comboBox()
 
+    def update_group_comboBox(self):
+        self.group_comboBox.clear()
+        self.add_group_names_to_comboBox()
+
     def add_group_names_to_comboBox(self):
         self.group_comboBox.addItem("Select group")
         for row in self.db_handler.retrieve_groups_names():
             self.group_comboBox.addItem(row[0])
+
+
 
     def on_combo_selection_change(self, index):
         if not self.group_comboBox.currentIndex() == 0:

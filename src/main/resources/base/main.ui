@@ -89,7 +89,17 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="comboBox"/>
+           <widget class="QCheckBox" name="in_stock_checkBox">
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="text">
+             <string>Only in stock</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="group_name_comboBox"/>
           </item>
          </layout>
         </item>
@@ -164,6 +174,9 @@
         <property name="sortingEnabled">
          <bool>true</bool>
         </property>
+        <attribute name="verticalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
        </widget>
       </item>
       <item>

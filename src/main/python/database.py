@@ -1,6 +1,6 @@
 import sqlite3
 
-from services import ItemData
+from services import ItemData, FilterManager
 
 
 class DatabaseHandler:
@@ -106,6 +106,17 @@ class DatabaseHandler:
             ORDER BY count DESC;
         """
         self.cursor.execute(retrieve_query, (group_name, ))
+        rows = self.cursor.fetchall()
+        return rows
+
+    def retrieve_items_where_filter_manager(self, filter_manager: FilterManager):
+        retrieve_query = f"""
+        SELECT *
+            FROM items
+            WHERE count {'>' if filter_manager.in_stock else '>='} 0  {"AND group_name = '" + filter_manager.group_name + "'" if filter_manager.group_name is not None else ''}  
+            ORDER BY count DESC;
+        """
+        self.cursor.execute(retrieve_query)
         rows = self.cursor.fetchall()
         return rows
 

@@ -1,4 +1,17 @@
 import csv
+from typing import Dict, Union
+
+
+class FilterManager:
+    def __init__(self, in_stock=False, group_name=None):
+        self.in_stock = in_stock
+        self.group_name = group_name
+
+    def __str__(self):
+        return f"FilterManager(in_stock={self.in_stock}, group_name={self.group_name})"
+
+    def to_tuple(self) -> Dict[str, Union[bool, str]]:
+        return {'in_stock': self.in_stock, 'group_name': self.group_name}
 
 
 class ItemData:
