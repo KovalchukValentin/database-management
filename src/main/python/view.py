@@ -20,10 +20,11 @@ class MainWindow(QDialog):
         loadUi(appctxt.get_resource("main.ui"), self)
         self.appctxt = appctxt
 
-        self.window_add_group = None
-        self.window_add_items = None
+        self.window_import_csv = None
+        self.window_item = None
 
         self.add_items_btn.clicked.connect(self.press_add_items)
+        self.import_csv_btn.clicked.connect(self.press_import_csv)
 
         self.edit_btn.clicked.connect(self.press_edit_item)
         self.plus_one_btn.clicked.connect(self.press_plus_one_to_item)
@@ -59,12 +60,12 @@ class MainWindow(QDialog):
         self.copy_cod_btn.setEnabled(True)
 
     def press_edit_item(self):
-        if self.window_add_items is None:
-            self.window_add_items = ItemWindow(appctxt=self.appctxt,
-                                               db_handler=self.db_handler,
-                                               item_data=self.get_current_row_item_data())
-        self.window_add_items.show()
-        self.window_add_items.closeEvent = self.window_add_items_closed
+        if self.window_item is None:
+            self.window_item = ItemWindow(appctxt=self.appctxt,
+                                          db_handler=self.db_handler,
+                                          item_data=self.get_current_row_item_data())
+        self.window_item.show()
+        self.window_item.closeEvent = self.window_item_closed
 
     def press_plus_one_to_item(self):
         current_count, index = self.get_current_count_and_index_from_model()
@@ -123,17 +124,17 @@ class MainWindow(QDialog):
             self.model.appendRow([QStandardItem(str(i)) for i in row])
 
     def press_add_items(self):
-        if self.window_add_items is None:
-            self.window_add_items = ItemWindow(appctxt=self.appctxt, db_handler=self.db_handler)
-        self.window_add_items.show()
-        self.window_add_items.closeEvent = self.window_add_items_closed
+        if self.window_item is None:
+            self.window_item = ItemWindow(appctxt=self.appctxt, db_handler=self.db_handler)
+        self.window_item.show()
+        self.window_item.closeEvent = self.window_item_closed
 
     def remove_rows(self):
         for row in range(self.model.rowCount(), -1, -1):
             self.model.removeRow(row)
 
-    def window_add_items_closed(self, event):
-        self.window_add_items = None
+    def window_item_closed(self, event):
+        self.window_item = None
         self.update_table()
         event.accept()
 
@@ -146,12 +147,23 @@ class MainWindow(QDialog):
         self.tableView.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         self.disable_btns()
 
+    def press_import_csv(self):
+        if self.window_import_csv is None:
+            self.window_import_csv = ImportCSVWindow(appctxt=self.appctxt, db_handler=self.db_handler)
+        self.window_import_csv.show()
+        self.window_import_csv.closeEvent = self.window_import_csv_closed
+
+    def window_import_csv_closed(self, event):
+        self.window_import_csv = None
+        self.update_table()
+        event.accept()
+
 
 class ItemWindow(QWidget):
     def __init__(self, appctxt, db_handler, item_data=ItemData()):
         super().__init__()
-        self.setWindowTitle("Item")
         loadUi(appctxt.get_resource("item.ui"), self)
+        self.setWindowTitle("Item")
 
         self.db_handler = db_handler
         self.item_data = item_data
@@ -218,6 +230,14 @@ class ItemWindow(QWidget):
         self.price_doubleSpinBox.setValue(self.item_data.price)
         self.code_edit.setText(self.item_data.code)
         self.count_spinBox.setValue(self.item_data.count)
+
+
+class ImportCSVWindow(QWidget):
+    def __init__(self, appctxt, db_handler):
+        super().__init__()
+        loadUi(appctxt.get_resource("import_csv.ui"), self)
+        self.setWindowTitle("Import CSV")
+        self.db_handler = db_handler
 
 
 def main():
