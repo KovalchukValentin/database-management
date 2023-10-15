@@ -52,7 +52,8 @@ class CSVImporter:
         return result
 
 
-def csv_to_items_data(csv_in_list: list):
+def path_csv_to_items_data(path_to_csv: str):
+    csv_in_list = CSVImporter(path_to_csv).get_in_list()
     if not csv_in_list:
         return []
     if len(csv_in_list[0]) < 7:

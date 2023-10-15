@@ -2,14 +2,14 @@ import sys
 import pyperclip
 
 from PyQt5.QtGui import QStandardItem, QStandardItemModel, QIntValidator
-from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QHeaderView
+from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QHeaderView, QFileDialog
 from PyQt5 import QtWidgets
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 from database import DatabaseHandler
 from PyQt5.uic import loadUi
 
-from services import ItemData
+from services import ItemData, path_csv_to_items_data
 
 
 class MainWindow(QDialog):
@@ -241,6 +241,30 @@ class ImportCSVWindow(QWidget):
         loadUi(appctxt.get_resource("import_csv.ui"), self)
         self.setWindowTitle("Import CSV")
         self.db_handler = db_handler
+        self.init_btns()
+
+    def init_btns(self):
+        self.browse_btn.clicked.connect(self.press_browse)
+        self.import_csv_btn.clicked.connect(self.press_import_csv)
+        self.load_example_btn.clicked.connect(self.press_load_example)
+
+    def press_browse(self):
+        options = QFileDialog.Options()
+        file_dialog = QFileDialog()
+        file_path, _ = file_dialog.getOpenFileName(self, 'Open File', '', 'Text Files (*.csv);;All Files (*)',
+                                                   options=options)
+        self.path_edit.setText(file_path)
+
+    def press_import_csv(self):
+        if not self.path_edit.text():
+            return
+
+        for item_data in path_csv_to_items_data(self.path_edit.text()):
+            if item_data.isValid():
+                self.db_handler.insert_item_data(item_data)
+
+    def press_load_example(self):
+        pass
 
 
 def main():
