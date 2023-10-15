@@ -2,7 +2,8 @@ import csv
 
 
 class ItemData:
-    def __init__(self, id_=None, group_name=None, taste=None, nicotine=None, volume=None, price=None, code=None, count=None):
+    def __init__(self, id_=None, group_name=None, taste=None, nicotine=None, volume=None, price=None, code=None,
+                 count=None):
         self.id_ = id_
         self.group_name = group_name
         self.taste = taste
@@ -49,3 +50,11 @@ class CSVImporter:
             for row in csv_reader:
                 result.append(row)
         return result
+
+
+def csv_to_items_data(csv_in_list: list):
+    if not csv_in_list:
+        return []
+    if len(csv_in_list[0]) < 7:
+        return []
+    return [ItemData(None, row[0], row[1], row[2], row[3], row[4], row[5], row[6]) for row in csv_in_list]
