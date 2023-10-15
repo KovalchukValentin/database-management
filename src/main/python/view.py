@@ -1,3 +1,4 @@
+import shutil
 import sys
 import pyperclip
 
@@ -241,6 +242,7 @@ class ImportCSVWindow(QWidget):
         loadUi(appctxt.get_resource("import_csv.ui"), self)
         self.setWindowTitle("Import CSV")
         self.db_handler = db_handler
+        self.path_to_example = appctxt.get_resource("example.csv")
         self.init_btns()
 
     def init_btns(self):
@@ -253,18 +255,27 @@ class ImportCSVWindow(QWidget):
         file_dialog = QFileDialog()
         file_path, _ = file_dialog.getOpenFileName(self, 'Open File', '', 'Text Files (*.csv);;All Files (*)',
                                                    options=options)
-        self.path_edit.setText(file_path)
+        if file_path:
+            self.path_edit.setText(file_path)
 
     def press_import_csv(self):
         if not self.path_edit.text():
             return
-
         for item_data in path_csv_to_items_data(self.path_edit.text()):
             if item_data.isValid():
-                self.db_handler.insert_item_data(item_data)
+                try:
+                    self.db_handler.insert_item_data(item_data)
+                except:
+                    continue
+        self.close()
 
     def press_load_example(self):
-        pass
+        options = QFileDialog.Options()
+        directory_dialog = QFileDialog()
+        directory_path = directory_dialog.getExistingDirectory(self, 'Open Folder', '', options=options)
+        if directory_path:
+            shutil.copy(self.path_to_example, directory_path + '/' + self.path_to_example.split('\\')[-1])
+        self.close()
 
 
 def main():
