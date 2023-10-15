@@ -1,3 +1,6 @@
+import csv
+
+
 class ItemData:
     def __init__(self, id_=None, group_name=None, taste=None, nicotine=None, volume=None, price=None, code=None, count=None):
         self.id_ = id_
@@ -33,3 +36,16 @@ class ItemData:
 
     def to_list(self):
         return [self.id_, self.group_name, self.taste, self.nicotine, self.volume, self.price, self.code, self.count]
+
+
+class CSVImporter:
+    def __init__(self, path):
+        self.path = path
+
+    def get_in_list(self):
+        result = []
+        with open(self.path, 'r') as file:
+            csv_reader = csv.reader(file)
+            for row in csv_reader:
+                result.append(row)
+        return result
