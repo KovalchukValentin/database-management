@@ -110,7 +110,7 @@ class MainWindow(QDialog):
         return ItemData(id_, group_name, taste, nicotine, volume, price, code, count)
 
     def update_group_name_comboBox(self):
-        self.comboBox.clear()
+        self.group_name_comboBox.clear()
         self.show_group_name_comboBox()
 
     def show_group_name_comboBox(self):
@@ -158,6 +158,7 @@ class MainWindow(QDialog):
     def window_item_closed(self, event):
         self.window_item = None
         self.update_table()
+        self.update_group_name_comboBox()
         event.accept()
 
     def update_table(self):
@@ -182,6 +183,7 @@ class MainWindow(QDialog):
     def window_import_csv_closed(self, event):
         self.window_import_csv = None
         self.update_table()
+        self.update_group_name_comboBox()
         event.accept()
 
 
