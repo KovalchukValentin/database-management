@@ -68,11 +68,11 @@ class MainWindow(QDialog):
 
     def press_edit_item(self):
         if self.window_item is None:
-            self.window_item = ItemWindow(appctxt=self.appctxt,
+            self.window_item = ItemWindow(main_window=self,
+                                          appctxt=self.appctxt,
                                           db_handler=self.db_handler,
                                           item_data=self.get_current_row_item_data())
         self.window_item.show()
-        self.window_item.closeEvent = self.window_item_closed
 
     def press_plus_one_to_item(self):
         current_count, index = self.get_current_count_and_index_from_model()
@@ -147,27 +147,18 @@ class MainWindow(QDialog):
 
     def press_add_items(self):
         if self.window_item is None:
-            self.window_item = ItemWindow(appctxt=self.appctxt, db_handler=self.db_handler)
+            self.window_item = ItemWindow(main_window=self,
+                                          appctxt=self.appctxt,
+                                          db_handler=self.db_handler)
         self.window_item.show()
-        self.window_item.closeEvent = self.window_item_closed
 
     def remove_rows(self):
         for row in range(self.model.rowCount(), -1, -1):
             self.model.removeRow(row)
 
-    def window_item_closed(self, event):
-        self.window_item = None
-        self.update_table()
-        self.update_group_name_comboBox()
-        event.accept()
-
     def update_table(self):
         self.remove_rows()
         self.show_data_in_table()
-        # if self.comboBox.currentIndex() == 0:
-        #     self.view_all_data_from_db()
-        # else:
-        #     self.view_group_items_from_db(self.comboBox.currentText())
         self.tableView.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         self.disable_btns()
 
@@ -176,23 +167,19 @@ class MainWindow(QDialog):
 
     def press_import_csv(self):
         if self.window_import_csv is None:
-            self.window_import_csv = ImportCSVWindow(appctxt=self.appctxt, db_handler=self.db_handler)
+            self.window_import_csv = ImportCSVWindow(main_window=self,
+                                                     appctxt=self.appctxt,
+                                                     db_handler=self.db_handler)
         self.window_import_csv.show()
-        self.window_import_csv.closeEvent = self.window_import_csv_closed
-
-    def window_import_csv_closed(self, event):
-        self.window_import_csv = None
-        self.update_table()
-        self.update_group_name_comboBox()
-        event.accept()
 
 
 class ItemWindow(QWidget):
-    def __init__(self, appctxt, db_handler, item_data=ItemData()):
+    def __init__(self, main_window: MainWindow, appctxt, db_handler, item_data=ItemData()):
         super().__init__()
         loadUi(appctxt.get_resource("item.ui"), self)
         self.setWindowTitle("Item")
 
+        self.main_window = main_window
         self.db_handler = db_handler
         self.item_data = item_data
 
@@ -215,6 +202,9 @@ class ItemWindow(QWidget):
         else:
             self.db_handler.update_item_data(self.item_data)
             self.close()
+
+        self.main_window.update_table()
+        self.main_window.update_group_name_comboBox()
 
     def clear(self):
         self.group_edit.setText("")
@@ -250,8 +240,6 @@ class ItemWindow(QWidget):
         for row in self.db_handler.retrieve_groups_names():
             self.group_comboBox.addItem(row[0])
 
-
-
     def on_combo_selection_change(self, index):
         if not self.group_comboBox.currentIndex() == 0:
             self.group_edit.setText(self.group_comboBox.currentText())
@@ -268,10 +256,11 @@ class ItemWindow(QWidget):
 
 
 class ImportCSVWindow(QWidget):
-    def __init__(self, appctxt, db_handler):
+    def __init__(self, main_window: MainWindow, appctxt, db_handler):
         super().__init__()
         loadUi(appctxt.get_resource("import_csv.ui"), self)
         self.setWindowTitle("Import CSV")
+        self.main_window = main_window
         self.db_handler = db_handler
         self.path_to_example = appctxt.get_resource("example.csv")
         self.init_btns()
@@ -298,6 +287,8 @@ class ImportCSVWindow(QWidget):
                     self.db_handler.insert_item_data(item_data)
                 except:
                     continue
+        self.main_window.update_table()
+        self.main_window.update_group_name_comboBox()
         self.close()
 
     def press_load_example(self):
