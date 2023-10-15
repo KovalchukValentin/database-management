@@ -15,27 +15,23 @@ from services import ItemData
 class MainWindow(QDialog):
     def __init__(self, appctxt, db_handler):
         super(MainWindow, self).__init__()
-        self.setWindowTitle("Database")
-        self.db_handler = db_handler
         loadUi(appctxt.get_resource("main.ui"), self)
+        self.db_handler = db_handler
         self.appctxt = appctxt
 
         self.window_import_csv = None
         self.window_item = None
 
-        self.add_items_btn.clicked.connect(self.press_add_items)
-        self.import_csv_btn.clicked.connect(self.press_import_csv)
-
-        self.edit_btn.clicked.connect(self.press_edit_item)
-        self.plus_one_btn.clicked.connect(self.press_plus_one_to_item)
-        self.minus_one_btn.clicked.connect(self.press_minus_one_to_item)
-        self.copy_cod_btn.clicked.connect(self.press_copy_cod_of_item)
-        self.disable_btns()
-
+        self.init_menu_btns()
         self.init_tableview()
+        self.init_under_tableview_btns()
 
         self.comboBox.currentIndexChanged.connect(self.on_combo_selection_change)
         self.show_left_menu()
+
+    def init_menu_btns(self):
+        self.add_items_btn.clicked.connect(self.press_add_items)
+        self.import_csv_btn.clicked.connect(self.press_import_csv)
 
     def init_tableview(self):
         self.model = QStandardItemModel(self)
@@ -43,6 +39,13 @@ class MainWindow(QDialog):
         self.tableView.setModel(self.model)
         selection_model = self.tableView.selectionModel()
         selection_model.selectionChanged.connect(self.selection_changed)
+
+    def init_under_tableview_btns(self):
+        self.edit_btn.clicked.connect(self.press_edit_item)
+        self.plus_one_btn.clicked.connect(self.press_plus_one_to_item)
+        self.minus_one_btn.clicked.connect(self.press_minus_one_to_item)
+        self.copy_cod_btn.clicked.connect(self.press_copy_cod_of_item)
+        self.disable_btns()
 
     def selection_changed(self, selected, deselected):
         self.enable_btns()
