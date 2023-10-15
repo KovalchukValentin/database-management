@@ -21,8 +21,8 @@ class DatabaseHandler:
             taste TEXT,
             nicotine INTEGER,
             volume INTEGER,
-            price INTEGER,
-            code INTEGER UNIQUE,
+            price REAL,
+            code TEXT UNIQUE,
             count INTEGER
         );
         """
@@ -31,7 +31,7 @@ class DatabaseHandler:
 
         self.conn.commit()
 
-    def insert_data_to_items(self, group_name: str, taste: str, nicotine: int, volume: int, price: int, code: int, count: int):
+    def insert_data_to_items(self, group_name: str, taste: str, nicotine: int, volume: int, price: int, code: str, count: int):
         insert_query = """
         INSERT INTO items (group_name, taste, nicotine, volume, price, code, count)
         VALUES (?, ?, ?, ?, ?, ?, ?);
@@ -45,7 +45,7 @@ class DatabaseHandler:
         INSERT INTO items (group_name, taste, nicotine, volume, price, code, count)
         VALUES (?, ?, ?, ?, ?, ?, ?);
         """
-        values = (data.group_name, data.taste, data.nicotine, data.volume, data.price, data.code, data.count)
+        values = (data.group_name, data.taste, data.nicotine, data.volume, data.price, str(data.code), data.count)
         self.cursor.execute(insert_query, values)
         self.conn.commit()
 

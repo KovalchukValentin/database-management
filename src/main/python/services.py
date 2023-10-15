@@ -10,7 +10,7 @@ class ItemData:
         self.nicotine = nicotine
         self.volume = volume
         self.price = price
-        self.code = code
+        self.code = str(code)
         self.count = count
 
     def setData(self, group_name=None, taste=None, nicotine=None, volume=None, price=None, code=None, count=None):
@@ -19,7 +19,7 @@ class ItemData:
         self.nicotine = nicotine
         self.volume = volume
         self.price = price
-        self.code = code
+        self.code = str(code)
         self.count = count
 
     def isValid(self) -> bool:
@@ -54,8 +54,9 @@ class CSVImporter:
 
 def path_csv_to_items_data(path_to_csv: str):
     csv_in_list = CSVImporter(path_to_csv).get_in_list()
-    if not csv_in_list:
+    if len(csv_in_list) == 1 or not csv_in_list:
         return []
+    csv_in_list.pop(0)
     if len(csv_in_list[0]) < 7:
         return []
     return [ItemData(None, row[0], row[1], row[2], row[3], row[4], row[5], row[6]) for row in csv_in_list]
