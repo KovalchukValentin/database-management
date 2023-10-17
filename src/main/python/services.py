@@ -58,7 +58,7 @@ class CSVImporter:
 
     def get_in_list(self):
         result = []
-        with open(self.path, 'r') as file:
+        with open(self.path, 'r', newline='', encoding='utf-8') as file:
             csv_reader = csv.reader(file)
             for row in csv_reader:
                 result.append(row)
