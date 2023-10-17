@@ -117,16 +117,16 @@ class MainWindow(QDialog):
         self.show_group_name_comboBox()
 
     def show_group_name_comboBox(self):
-        self.group_name_comboBox.addItem("All")
         self.filter_manager.group_name = None
+        self.group_name_comboBox.addItem(f'All ({self.db_handler.retrieve_count_in_group_with_filters(None, self.filter_manager)})')
         for row in self.db_handler.retrieve_groups_names_with_filters(self.filter_manager):
-            self.group_name_comboBox.addItem(row[0])
+            self.group_name_comboBox.addItem(f'{row[0]} ({self.db_handler.retrieve_count_in_group_with_filters(row[0], self.filter_manager)})')
 
     def on_combo_selection_change(self, index):
         if index == 0:
             self.filter_manager.group_name = None
         else:
-            self.filter_manager.group_name = self.group_name_comboBox.itemText(index)
+            self.filter_manager.group_name = " ".join(self.group_name_comboBox.itemText(index).split()[:-1:])
         self.update_table()
 
     def on_in_stock_checkBox_state_change(self, state):

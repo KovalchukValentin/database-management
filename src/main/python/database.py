@@ -77,11 +77,19 @@ class DatabaseHandler:
     def retrieve_groups_names_with_filters(self, filter_manager: FilterManager):
         retrieve_query = f"""SELECT DISTINCT group_name 
         FROM items 
-        WHERE count {'>' if filter_manager.in_stock else '>='} 0  {"AND group_name = '" + filter_manager.group_name + "'" if filter_manager.group_name is not None else ''}
+        WHERE count {'>' if filter_manager.in_stock else '>='} 0  {("AND group_name = '" + filter_manager.group_name + "'") if filter_manager.group_name is not None else ''}
         ORDER BY count DESC;"""
         self.cursor.execute(retrieve_query)
         rows = self.cursor.fetchall()
         return rows
+
+    def retrieve_count_in_group_with_filters(self, group_name, filter_manager: FilterManager):
+        retrieve_query = f"""SELECT COUNT(*) AS row_count 
+                FROM items 
+                WHERE count {'>' if filter_manager.in_stock else '>='} 0  {("AND group_name = '" + group_name + "'") if group_name is not None else ''}"""
+        self.cursor.execute(retrieve_query)
+        rows = self.cursor.fetchall()
+        return rows[0][0]
 
     def update_item_count_value(self, _id: int, new_value: int):
         update_query = "UPDATE items SET count = ? WHERE id = ?;"
@@ -122,7 +130,7 @@ class DatabaseHandler:
         retrieve_query = f"""
         SELECT *
             FROM items
-            WHERE count {'>' if filter_manager.in_stock else '>='} 0  {"AND group_name = '" + filter_manager.group_name + "'" if filter_manager.group_name is not None else ''}  
+            WHERE count {'>' if filter_manager.in_stock else '>='} 0  {("AND group_name = '" + filter_manager.group_name + "'") if filter_manager.group_name is not None else ''}  
             ORDER BY count DESC;
         """
         self.cursor.execute(retrieve_query)
