@@ -74,6 +74,15 @@ class DatabaseHandler:
         rows = self.cursor.fetchall()
         return rows
 
+    def retrieve_groups_names_with_filters(self, filter_manager: FilterManager):
+        retrieve_query = f"""SELECT DISTINCT group_name 
+        FROM items 
+        WHERE count {'>' if filter_manager.in_stock else '>='} 0  {"AND group_name = '" + filter_manager.group_name + "'" if filter_manager.group_name is not None else ''}
+        ORDER BY count DESC;"""
+        self.cursor.execute(retrieve_query)
+        rows = self.cursor.fetchall()
+        return rows
+
     def update_item_count_value(self, _id: int, new_value: int):
         update_query = "UPDATE items SET count = ? WHERE id = ?;"
         self.cursor.execute(update_query, (new_value, _id))

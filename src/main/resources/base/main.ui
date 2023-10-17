@@ -73,20 +73,7 @@
            <enum>QLayout::SetMinimumSize</enum>
           </property>
           <item>
-           <widget class="QLabel" name="label">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>70</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Filters</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
+           <widget class="QComboBox" name="group_name_comboBox"/>
           </item>
           <item>
            <widget class="QCheckBox" name="in_stock_checkBox">
@@ -96,10 +83,13 @@
             <property name="text">
              <string>Only in stock</string>
             </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+            <property name="tristate">
+             <bool>false</bool>
+            </property>
            </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="group_name_comboBox"/>
           </item>
          </layout>
         </item>
@@ -150,7 +140,7 @@
         <item>
          <widget class="QLabel" name="label_2">
           <property name="text">
-           <string>Version 1.0.48 Developed by https://github.com/KovalchukValentin</string>
+           <string>Version 1.0.51 Developed by https://github.com/KovalchukValentin</string>
           </property>
          </widget>
         </item>

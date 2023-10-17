@@ -3,7 +3,7 @@ from typing import Dict, Union
 
 
 class FilterManager:
-    def __init__(self, in_stock=False, group_name=None):
+    def __init__(self, in_stock=True, group_name=None):
         self.in_stock = in_stock
         self.group_name = group_name
 

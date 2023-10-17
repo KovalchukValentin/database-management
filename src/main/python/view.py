@@ -31,7 +31,6 @@ class MainWindow(QDialog):
         self.init_menu_btns()
         self.init_tableview()
         self.init_under_tableview_btns()
-
         self.group_name_comboBox.currentIndexChanged.connect(self.on_combo_selection_change)
         self.show_group_name_comboBox()
 
@@ -120,7 +119,7 @@ class MainWindow(QDialog):
     def show_group_name_comboBox(self):
         self.group_name_comboBox.addItem("All")
         self.filter_manager.group_name = None
-        for row in self.db_handler.retrieve_groups_names():
+        for row in self.db_handler.retrieve_groups_names_with_filters(self.filter_manager):
             self.group_name_comboBox.addItem(row[0])
 
     def on_combo_selection_change(self, index):
@@ -135,6 +134,7 @@ class MainWindow(QDialog):
             self.filter_manager.in_stock = True
         else:
             self.filter_manager.in_stock = False
+        self.update_group_name_comboBox()
         self.update_table()
 
     def view_all_data_from_db(self):
