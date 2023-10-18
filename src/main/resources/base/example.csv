@@ -1,0 +1,2 @@
+Group Name STRING,Taste STRING,Nicotine ml INTEGER,Volume mg INTEGER,Price FLOAT,Code UNIQUE STRING,Count INTEGER
+group name,Taste,15,15,2.00,0569576237858,1
