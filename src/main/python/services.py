@@ -1,6 +1,9 @@
 import csv
 from typing import Dict, Union
 
+class Settings:
+    def __init__(self):
+        self.language = "ua"
 
 class Language:
     def __init__(self, language: str):
@@ -19,7 +22,7 @@ class Language:
         self.volume = "Volume"
         self.count = "Count"
         self.price = "Price"
-        self.code = "Code"
+        self.cod = "Cod"
         self.nicotine = "Nicotine"
         self.add_items = "Add items"
         self.edit = "Edit"
@@ -43,7 +46,7 @@ class Language:
             self.volume = "Об'єм"
             self.count = "Кількість"
             self.price = "Ціна"
-            self.code = "Код"
+            self.cod = "Код"
             self.nicotine = "Нікотин"
             self.add_items = "Додати"
             self.edit = "Редагувати"

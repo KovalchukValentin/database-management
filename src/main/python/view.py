@@ -13,7 +13,7 @@ from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from database import DatabaseHandler
 from PyQt5.uic import loadUi
 
-from services import ItemData, path_csv_to_items_data, FilterManager
+from services import ItemData, path_csv_to_items_data, FilterManager, Language, Settings
 
 
 class MainWindow(QDialog):
@@ -23,7 +23,7 @@ class MainWindow(QDialog):
         # Loads the UI from a file using appctxt and sets up event connections
         super(MainWindow, self).__init__()
         loadUi(appctxt.get_resource("main.ui"), self)
-        self.setWindowTitle("")
+        self.language = Language(Settings().language)
         self.db_handler = db_handler
         self.filter_manager = FilterManager()
         self.appctxt = appctxt
@@ -36,6 +36,7 @@ class MainWindow(QDialog):
         self.init_under_tableview_btns()
         self.group_name_comboBox.currentIndexChanged.connect(self.on_combo_selection_change)
         self.show_group_name_comboBox()
+        self.update_language()
 
     def init_menu_btns(self):
         # Initializes menu buttons and sets up event connections
@@ -48,7 +49,14 @@ class MainWindow(QDialog):
     def init_tableview(self):
         # Initializes the table view
         self.model = QStandardItemModel(self)
-        self.model.setHorizontalHeaderLabels(['No', 'Group', 'Taste', 'Nicotine', 'Volume', 'Price', 'Code', 'Count'])
+        self.model.setHorizontalHeaderLabels(['No',
+                                              self.language.group,
+                                              self.language.taste,
+                                              self.language.nicotine,
+                                              self.language.volume,
+                                              self.language.price,
+                                              self.language.cod,
+                                              self.language.count])
         self.tableView.setModel(self.model)
         selection_model = self.tableView.selectionModel()
         selection_model.selectionChanged.connect(self.selection_changed)
@@ -141,7 +149,7 @@ class MainWindow(QDialog):
     def show_group_name_comboBox(self):
         # Shows group names in the ComboBox
         self.filter_manager.group_name = None
-        self.group_name_comboBox.addItem(f'All ({self.db_handler.retrieve_count_in_group_with_filters(None, self.filter_manager)})')
+        self.group_name_comboBox.addItem(f'{self.language.all} ({self.db_handler.retrieve_count_in_group_with_filters(None, self.filter_manager)})')
         for row in self.db_handler.retrieve_groups_names_with_filters(self.filter_manager):
             self.group_name_comboBox.addItem(f'{row[0]} ({self.db_handler.retrieve_count_in_group_with_filters(row[0], self.filter_manager)})')
 
@@ -213,6 +221,11 @@ class MainWindow(QDialog):
                                                      db_handler=self.db_handler)
         self.window_import_csv.show()
 
+    def update_language(self):
+        self.in_stock_checkBox.setText(self.language.only_in_stock)
+        self.add_items_btn.setText(self.language.add_items)
+        self.edit_btn.setText(self.language.edit)
+        self.copy_cod_btn.setText(self.language.cod)
 
 
 class ItemWindow(QWidget):
@@ -222,7 +235,8 @@ class ItemWindow(QWidget):
         # Loads the UI from a file using appctxt and sets up event connections
         super().__init__()
         loadUi(appctxt.get_resource("item.ui"), self)
-        self.setWindowTitle("Item")
+        self.language = Language(Settings().language)
+        self.setWindowTitle(self.language.item)
 
         self.main_window = main_window
         self.db_handler = db_handler
@@ -300,6 +314,7 @@ class ItemWindow(QWidget):
             self.group_comboBox.setCurrentIndex(0)
 
     def show_data(self):
+        self.setWindowTitle(f"{self.language.item} #{self.item_data.id_}")
         # Displays item data in the UI input fields
         self.group_edit.setText(self.item_data.group_name)
         self.taste_edit.setText(self.item_data.taste)
@@ -313,6 +328,7 @@ class ItemWindow(QWidget):
         self.main_window.window_item = None
 
 
+
 class ImportCSVWindow(QWidget):
     def __init__(self, main_window: MainWindow, appctxt, db_handler):
         # Constructor for the ImportCSVWindow class
@@ -320,6 +336,7 @@ class ImportCSVWindow(QWidget):
         # Loads the UI from a file using appctxt and sets up event connections
         super().__init__()
         loadUi(appctxt.get_resource("import_csv.ui"), self)
+        self.language = Language(Settings().language)
         self.setWindowTitle("Import CSV")
         self.main_window = main_window
         self.db_handler = db_handler
