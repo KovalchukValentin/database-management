@@ -39,6 +39,7 @@ class MainWindow(QDialog):
 
     def init_menu_btns(self):
         # Initializes menu buttons and sets up event connections
+
         self.github_btn.clicked.connect(lambda: webbrowser.open("https://github.com/KovalchukValentin"))
         self.in_stock_checkBox.stateChanged.connect(self.on_in_stock_checkBox_state_change)
         self.add_items_btn.clicked.connect(self.press_add_items)
@@ -213,6 +214,7 @@ class MainWindow(QDialog):
         self.window_import_csv.show()
 
 
+
 class ItemWindow(QWidget):
     def __init__(self, main_window: MainWindow, appctxt, db_handler, item_data=ItemData()):
         # Constructor for the ItemWindow class
@@ -307,6 +309,9 @@ class ItemWindow(QWidget):
         self.code_edit.setText(self.item_data.code)
         self.count_spinBox.setValue(self.item_data.count)
 
+    def closeEvent(self, event) -> None:
+        self.main_window.window_item = None
+
 
 class ImportCSVWindow(QWidget):
     def __init__(self, main_window: MainWindow, appctxt, db_handler):
@@ -361,6 +366,9 @@ class ImportCSVWindow(QWidget):
         if directory_path:
             shutil.copy(self.path_to_example, directory_path + '/' + self.path_to_example.split('\\')[-1])
         self.close()
+
+    def closeEvent(self, event) -> None:
+        self.main_window.window_import_csv = None
 
 
 def main():
