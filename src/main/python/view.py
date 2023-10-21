@@ -16,6 +16,7 @@ from PyQt5.uic import loadUi
 from services import ItemData, path_csv_to_items_data, FilterManager
 from language import Language
 from setting import Settings
+from logger import Logger
 from style import Theme
 
 
@@ -27,6 +28,7 @@ class MainWindow(QDialog):
         super(MainWindow, self).__init__()
         loadUi(appctxt.get_resource("main.ui"), self)
         self.language = Language(Settings().language)
+        self.logger = Logger()
         self.db_handler = db_handler
         self.filter_manager = FilterManager()
         self.appctxt = appctxt
@@ -106,23 +108,38 @@ class MainWindow(QDialog):
     def press_plus_one_to_item(self):
         # Handler for plus one button press
         # Increases item count by one in the database and updates the UI
-        current_count, index = self.get_current_count_and_index_from_model()
-        self.db_handler.update_item_count_value(index, current_count + 1)
+        item_data = self.get_item_data_from_table_view()
+        item_data.count += 1
+        self.db_handler.update_item_count_value(item_data.id_, item_data.count)
 
         item_index = self.model.index(self.tableView.selectionModel().currentIndex().row(), 7)
-        self.model.setData(item_index, current_count + 1)
+        self.model.setData(item_index, item_data.count)
+
+        self.logger.add_log(f"+1 RESULT: {item_data}")
 
     def press_minus_one_to_item(self):
         # Handler for minus one button press
         # Decreases item count by one in the database and updates the UI
-        current_count, index = self.get_current_count_and_index_from_model()
-        if current_count <= 0:
+        item_data = self.get_item_data_from_table_view()
+        if item_data.count <= 0:
             return
-
-        self.db_handler.update_item_count_value(index, current_count - 1)
+        item_data.count -= 1
+        self.db_handler.update_item_count_value(item_data.id_, item_data.count)
 
         item_index = self.model.index(self.tableView.selectionModel().currentIndex().row(), 7)
-        self.model.setData(item_index, current_count - 1)
+        self.model.setData(item_index, item_data.count)
+
+        self.logger.add_log(f"-1 RESULT: {item_data}")
+
+    def get_item_data_from_table_view(self) -> ItemData:
+        return ItemData(id_=int(self.model.item(self.tableView.selectionModel().currentIndex().row(), 0).text()),
+                        group_name=self.model.item(self.tableView.selectionModel().currentIndex().row(), 1).text(),
+                        taste=self.model.item(self.tableView.selectionModel().currentIndex().row(), 2).text(),
+                        nicotine=int(self.model.item(self.tableView.selectionModel().currentIndex().row(), 3).text()),
+                        volume=int(self.model.item(self.tableView.selectionModel().currentIndex().row(), 4).text()),
+                        price=float(self.model.item(self.tableView.selectionModel().currentIndex().row(), 5).text()),
+                        code=self.model.item(self.tableView.selectionModel().currentIndex().row(), 6).text(),
+                        count=int(self.model.item(self.tableView.selectionModel().currentIndex().row(), 7).text()))
 
     def get_current_count_and_index_from_model(self):
         # Retrieves the current item count and index from the table view
@@ -242,6 +259,7 @@ class ItemWindow(QWidget):
         loadUi(appctxt.get_resource("item.ui"), self)
         self.language = Language(Settings().language)
         self.setWindowTitle(self.language.item)
+        self.logger = Logger()
 
         self.main_window = main_window
         self.db_handler = db_handler
@@ -252,7 +270,9 @@ class ItemWindow(QWidget):
 
         self.init_group_comboBox()
 
+        self.prev_version_data = None
         if not self.item_data.isNew():
+            self.prev_version_data = self.item_data
             self.show_data()
 
         self.update_language()
@@ -268,8 +288,11 @@ class ItemWindow(QWidget):
             self.db_handler.insert_item_data(self.item_data)
             self.clear()
             self.update_group_comboBox()
+            self.logger.add_log(f"ADD: {self.item_data}")
         else:
             self.db_handler.update_item_data(self.item_data)
+            self.logger.add_log(f"UPDATE: {self.prev_version_data} UPDATE TO {self.item_data}")
+            self.prev_version_data = self.item_data
             self.close()
 
         self.main_window.update_table()
@@ -355,6 +378,7 @@ class ImportCSVWindow(QWidget):
         super().__init__()
         loadUi(appctxt.get_resource("import_csv.ui"), self)
         self.language = Language(Settings().language)
+        self.logger = Logger()
         self.setWindowTitle("Import CSV")
         self.main_window = main_window
         self.db_handler = db_handler
@@ -388,6 +412,7 @@ class ImportCSVWindow(QWidget):
             if item_data.isValid():
                 try:
                     self.db_handler.insert_item_data(item_data)
+                    self.logger.add_log(f"ADD: {item_data}")
                 except:
                     continue
         self.main_window.update_table()
@@ -402,6 +427,7 @@ class ImportCSVWindow(QWidget):
         directory_path = directory_dialog.getExistingDirectory(self, 'Open Folder', '', options=options)
         if directory_path:
             shutil.copy(self.path_to_example, directory_path + '/' + self.path_to_example.split('\\')[-1])
+            self.logger.add_log("Download example file scv")
         self.close()
 
     def closeEvent(self, event) -> None:
