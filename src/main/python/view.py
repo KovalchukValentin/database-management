@@ -13,7 +13,7 @@ from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from database import DatabaseHandler
 from PyQt5.uic import loadUi
 
-from services import ItemData, path_csv_to_items_data, FilterManager, Language, Settings
+from services import ItemData, path_csv_to_items_data, FilterManager, Language, Settings, Theme
 
 
 class MainWindow(QDialog):
@@ -37,6 +37,8 @@ class MainWindow(QDialog):
         self.group_name_comboBox.currentIndexChanged.connect(self.on_combo_selection_change)
         self.show_group_name_comboBox()
         self.update_language()
+
+        self.setStyleSheet(Theme(Settings().theme).get_theme())
 
     def init_menu_btns(self):
         # Initializes menu buttons and sets up event connections
@@ -251,6 +253,7 @@ class ItemWindow(QWidget):
             self.show_data()
 
         self.update_language()
+        self.setStyleSheet(Theme(Settings().theme).get_theme())
 
     def press_save(self):
         # Handler for save button press
@@ -355,6 +358,7 @@ class ImportCSVWindow(QWidget):
         self.path_to_example = appctxt.get_resource("example.csv")
         self.init_btns()
         self.update_language()
+        self.setStyleSheet(Theme(Settings().theme).get_theme())
 
     def init_btns(self):
         # Initializes buttons and sets up event connections
