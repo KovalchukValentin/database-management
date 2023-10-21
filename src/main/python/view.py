@@ -13,7 +13,10 @@ from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from database import DatabaseHandler
 from PyQt5.uic import loadUi
 
-from services import ItemData, path_csv_to_items_data, FilterManager, Language, Settings, Theme
+from services import ItemData, path_csv_to_items_data, FilterManager
+from language import Language
+from setting import Settings
+from style import Theme
 
 
 class MainWindow(QDialog):
