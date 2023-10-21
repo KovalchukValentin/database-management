@@ -250,6 +250,8 @@ class ItemWindow(QWidget):
         if not self.item_data.isNew():
             self.show_data()
 
+        self.update_language()
+
     def press_save(self):
         # Handler for save button press
         # Extracts data from UI inputs, validates it, and either inserts or updates item data in the database
@@ -302,7 +304,7 @@ class ItemWindow(QWidget):
 
     def add_group_names_to_comboBox(self):
         # Populates the group ComboBox with group names from the database
-        self.group_comboBox.addItem("Select group")
+        self.group_comboBox.addItem(self.language.select_group)
         for row in self.db_handler.retrieve_groups_names():
             self.group_comboBox.addItem(row[0])
 
@@ -327,6 +329,16 @@ class ItemWindow(QWidget):
     def closeEvent(self, event) -> None:
         self.main_window.window_item = None
 
+    def update_language(self):
+        self.group_label.setText(self.language.group)
+        self.taste_label.setText(self.language.taste)
+        self.nicotine_label.setText(self.language.nicotine)
+        self.volume_label.setText(self.language.volume)
+        self.price_label.setText(self.language.price)
+        self.cod_label.setText(self.language.cod)
+        self.count_label.setText(self.language.count)
+        self.cansel_btn.setText(self.language.cansel)
+        self.save_btn.setText(self.language.save)
 
 
 class ImportCSVWindow(QWidget):
@@ -342,6 +354,7 @@ class ImportCSVWindow(QWidget):
         self.db_handler = db_handler
         self.path_to_example = appctxt.get_resource("example.csv")
         self.init_btns()
+        self.update_language()
 
     def init_btns(self):
         # Initializes buttons and sets up event connections
@@ -386,6 +399,10 @@ class ImportCSVWindow(QWidget):
 
     def closeEvent(self, event) -> None:
         self.main_window.window_import_csv = None
+
+    def update_language(self):
+        self.load_example_btn.setText(self.language.load_example)
+        self.browse_btn.setText(self.language.browse)
 
 
 def main():

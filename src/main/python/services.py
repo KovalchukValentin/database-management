@@ -29,6 +29,7 @@ class Language:
         self.item = "Item"
         self.select_group = "Select group"
         self.load_example = "Load example"
+        self.browse = "Browse"
 
     def setLanguage(self, language: str) -> None:
         self.language = language
@@ -53,6 +54,7 @@ class Language:
             self.item = "Елемент"
             self.select_group = "Обрати групу"
             self.load_example = "Завантажити приклад"
+            self.browse = "Знайти"
         else:
             self.init_language()
 

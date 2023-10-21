@@ -16,9 +16,9 @@
   <widget class="QPushButton" name="load_example_btn">
    <property name="geometry">
     <rect>
-     <x>320</x>
+     <x>252</x>
      <y>110</y>
-     <width>93</width>
+     <width>161</width>
      <height>28</height>
     </rect>
    </property>
@@ -29,9 +29,9 @@
   <widget class="QPushButton" name="import_csv_btn">
    <property name="geometry">
     <rect>
-     <x>430</x>
+     <x>420</x>
      <y>110</y>
-     <width>93</width>
+     <width>111</width>
      <height>28</height>
     </rect>
    </property>
