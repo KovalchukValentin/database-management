@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1280</width>
-    <height>720</height>
+    <width>1920</width>
+    <height>1280</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1280</width>
-    <height>700</height>
+    <width>1920</width>
+    <height>1280</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>1280</width>
-    <height>720</height>
+    <width>1920</width>
+    <height>1280</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -30,8 +30,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1281</width>
-     <height>711</height>
+     <width>1921</width>
+     <height>1281</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="scene_1">
@@ -56,7 +56,7 @@
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>600</height>
+            <height>1200</height>
            </size>
           </property>
           <property name="layoutDirection">
@@ -99,6 +99,9 @@
        <layout class="QHBoxLayout" name="horizontalLayout_5">
         <property name="sizeConstraint">
          <enum>QLayout::SetMinimumSize</enum>
+        </property>
+        <property name="bottomMargin">
+         <number>15</number>
         </property>
         <item>
          <widget class="QPushButton" name="import_csv_btn">
@@ -167,7 +170,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>650</height>
+          <height>1200</height>
          </size>
         </property>
         <property name="editTriggers">
@@ -197,6 +200,9 @@
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <property name="sizeConstraint">
          <enum>QLayout::SetMinimumSize</enum>
+        </property>
+        <property name="bottomMargin">
+         <number>15</number>
         </property>
         <item>
          <widget class="QPushButton" name="edit_btn">

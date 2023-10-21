@@ -367,7 +367,7 @@ class ImportCSVWindow(QWidget):
         # Opens a file dialog for selecting a CSV file
         options = QFileDialog.Options()
         file_dialog = QFileDialog()
-        file_path, _ = file_dialog.getOpenFileName(self, 'Open File', '', 'Text Files (*.csv);;All Files (*)',
+        file_path, _ = file_dialog.getOpenFileName(self, 'Open File', '', 'CSV Files (*.csv);;All Files (*)',
                                                    options=options)
         if file_path:
             self.path_edit.setText(file_path)
@@ -415,8 +415,9 @@ def main():
 
     widget = QtWidgets.QStackedWidget()
     widget.addWidget(main_window)
-    widget.setFixedHeight(720)
-    widget.setFixedWidth(1280)
+    widget.setFixedHeight(1280)
+    widget.setFixedWidth(1920)
+    widget.move(0, 0)
     widget.setWindowTitle("Developed By @Valent_nk")
     widget.show()
 
