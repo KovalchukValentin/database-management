@@ -225,7 +225,9 @@ class DatabaseHandler:
         retrieve_query = f"""
         SELECT *
             FROM items
-            WHERE count {'>' if filter_manager.in_stock else '>='} 0  {("AND group_name = '" + filter_manager.group_name + "'") if filter_manager.group_name is not None else ''}  
+            WHERE count {'>' if filter_manager.in_stock else '>='} 0  
+{("AND group_name = '" + filter_manager.group_name + "'") if filter_manager.group_name is not None else ''}
+{("AND LOWER(taste) = '" + filter_manager.search_taste + "%'") if filter_manager.search_taste is not None and len(filter_manager.search_taste) > 2 else ''}  
             ORDER BY count DESC;
         """
         self.cursor.execute(retrieve_query)

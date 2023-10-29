@@ -3,7 +3,7 @@ from typing import Dict, Union
 
 
 class FilterManager:
-    def __init__(self, in_stock=True, group_name=None):
+    def __init__(self, in_stock=True, group_name=None, search_teste=None):
         """Initialize a FilterManager instance.
 
         Args:
@@ -12,6 +12,7 @@ class FilterManager:
         """
         self.in_stock = in_stock
         self.group_name = group_name
+        self.search_taste = search_teste
 
     def __str__(self):
         """Return a string representation of the FilterManager instance."""
