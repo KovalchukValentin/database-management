@@ -166,7 +166,7 @@
         <item>
          <widget class="QLabel" name="label_2">
           <property name="text">
-           <string>Version 1.2.71 Developed by https://github.com/KovalchukValentin</string>
+           <string>Version 1.2.72 Developed by https://github.com/KovalchukValentin</string>
           </property>
          </widget>
         </item>

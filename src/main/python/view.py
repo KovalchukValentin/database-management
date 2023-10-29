@@ -387,6 +387,7 @@ class ItemWindow(QWidget):
         self.count_label.setText(self.language.count)
         self.cansel_btn.setText(self.language.cansel)
         self.save_btn.setText(self.language.save)
+        self.delete_btn.setText(self.language.delete)
 
 
 class ImportCSVWindow(QWidget):

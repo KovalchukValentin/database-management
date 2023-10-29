@@ -23,6 +23,7 @@ class Language:
         self.select_group = "Select group"
         self.load_example = "Load example"
         self.browse = "Browse"
+        self.delete = "Delete"
 
     def setLanguage(self, language: str) -> None:
         self.language = language
@@ -48,5 +49,6 @@ class Language:
             self.select_group = "Обрати групу"
             self.load_example = "Завантажити приклад"
             self.browse = "Знайти"
+            self.delete = "Видалити"
         else:
             self.init_language()
