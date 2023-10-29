@@ -267,15 +267,16 @@ class ItemWindow(QWidget):
 
         self.cansel_btn.clicked.connect(self.press_cansel)
         self.save_btn.clicked.connect(self.press_save)
-        self.delete_btn.connect(self.press_delete)
+        self.delete_btn.clicked.connect(self.press_delete)
 
         self.init_group_comboBox()
 
         self.prev_version_data = None
         if not self.item_data.isNew():
             self.prev_version_data = self.item_data
-            self.delete_btn.setEnabled(False)
             self.show_data()
+        else:
+            self.delete_btn.setEnabled(False)
 
         self.update_language()
         self.setStyleSheet(Theme(Settings().theme).get_theme())
@@ -315,7 +316,11 @@ class ItemWindow(QWidget):
         self.close()
 
     def press_delete(self):
-        pass
+        self.db_handler.delete_data_from_items(self.item_data.id_)
+        self.logger.add_log(f"DELETE: {self.item_data}")
+        self.main_window.update_table()
+        self.main_window.update_group_name_comboBox()
+        self.close()
 
     def change_item_data_from_inputs(self):
         self.item_data.setData(group_name=self.group_edit.text(),
