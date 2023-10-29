@@ -448,8 +448,8 @@ def main():
 
     widget = QtWidgets.QStackedWidget()
     widget.addWidget(main_window)
-    widget.setFixedHeight(1280)
-    widget.setFixedWidth(1920)
+    widget.setFixedHeight(975)
+    widget.setFixedWidth(1680)
     widget.move(0, 0)
     widget.setWindowTitle("Developed By @Valent_nk")
     widget.show()
