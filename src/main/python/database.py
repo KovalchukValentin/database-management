@@ -146,7 +146,10 @@ class DatabaseHandler:
                 """
         retrieve_query = f"""SELECT COUNT(*) AS row_count 
                 FROM items 
-                WHERE count {'>' if filter_manager.in_stock else '>='} 0  {("AND group_name = '" + group_name + "'") if group_name is not None else ''}"""
+                WHERE count {'>' if filter_manager.in_stock else '>='} 0  
+{("AND group_name = '" + group_name + "'") if group_name is not None else ''}
+{("AND LOWER(taste) LIKE '%" + filter_manager.search_taste + "%'") if filter_manager.search_taste is not None else ''} 
+"""
         self.cursor.execute(retrieve_query)
         rows = self.cursor.fetchall()
         return rows[0][0]
@@ -227,9 +230,11 @@ class DatabaseHandler:
             FROM items
             WHERE count {'>' if filter_manager.in_stock else '>='} 0  
 {("AND group_name = '" + filter_manager.group_name + "'") if filter_manager.group_name is not None else ''}
-{("AND LOWER(taste) = '" + filter_manager.search_taste + "%'") if filter_manager.search_taste is not None and len(filter_manager.search_taste) > 2 else ''}  
+{("AND LOWER(taste) LIKE '%" + filter_manager.search_taste + "%'") if filter_manager.search_taste is not None else ''}  
             ORDER BY count DESC;
         """
+        print(retrieve_query)
+        print(filter_manager)
         self.cursor.execute(retrieve_query)
         rows = self.cursor.fetchall()
         return rows

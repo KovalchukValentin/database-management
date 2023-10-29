@@ -16,7 +16,7 @@ class FilterManager:
 
     def __str__(self):
         """Return a string representation of the FilterManager instance."""
-        return f"FilterManager(in_stock={self.in_stock}, group_name={self.group_name})"
+        return f"FilterManager(in_stock={self.in_stock}, group_name={self.group_name}, search_taste={self.search_taste})"
 
     def to_tuple(self) -> Dict[str, Union[bool, str]]:
         """Convert FilterManager instance to a dictionary.
@@ -24,7 +24,7 @@ class FilterManager:
         Returns:
             Dict[str, Union[bool, str]]: Dictionary representation of the FilterManager instance.
         """
-        return {'in_stock': self.in_stock, 'group_name': self.group_name}
+        return {'in_stock': self.in_stock, 'group_name': self.group_name, 'search_taste': self.search_taste}
 
 
 class ItemData:

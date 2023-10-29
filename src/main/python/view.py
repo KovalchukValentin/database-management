@@ -40,6 +40,7 @@ class MainWindow(QDialog):
         self.init_tableview()
         self.init_under_tableview_btns()
         self.group_name_comboBox.currentIndexChanged.connect(self.on_combo_selection_change)
+        self.search_edit.textChanged.connect(self.on_search_edit_changed)
         self.show_group_name_comboBox()
         self.update_language()
 
@@ -193,6 +194,14 @@ class MainWindow(QDialog):
             self.filter_manager.in_stock = False
         self.update_group_name_comboBox()
         self.update_table()
+
+    def on_search_edit_changed(self, text):
+        if len(text) > 1:
+            self.filter_manager.search_taste = text
+        else:
+            self.filter_manager.search_taste = None
+        self.update_table()
+        self.update_group_name_comboBox()
 
     def view_all_data_from_db(self):
         # Retrieves and displays all data from the database
