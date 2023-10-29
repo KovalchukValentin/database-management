@@ -233,8 +233,6 @@ class DatabaseHandler:
 {("AND LOWER(taste) LIKE '%" + filter_manager.search_taste + "%'") if filter_manager.search_taste is not None else ''}  
             ORDER BY count DESC;
         """
-        print(retrieve_query)
-        print(filter_manager)
         self.cursor.execute(retrieve_query)
         rows = self.cursor.fetchall()
         return rows

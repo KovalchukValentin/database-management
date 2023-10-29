@@ -196,7 +196,7 @@ class MainWindow(QDialog):
         self.update_table()
 
     def on_search_edit_changed(self, text):
-        if len(text) > 1:
+        if len(text) > 0:
             self.filter_manager.search_taste = text
         else:
             self.filter_manager.search_taste = None
