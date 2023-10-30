@@ -258,6 +258,10 @@ class MainWindow(QMainWindow):
         self.add_items_btn.setText(self.language.add_items)
         self.edit_btn.setText(self.language.edit)
         self.copy_cod_btn.setText(self.language.cod)
+        self.actionNew_items.setText(self.language.new_items)
+        self.menuFile.setTitle(self.language.file)
+        self.actionSettings.setText(self.language.settings)
+
 
 
 class ItemWindow(QWidget):

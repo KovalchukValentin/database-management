@@ -24,6 +24,9 @@ class Language:
         self.load_example = "Load example"
         self.browse = "Browse"
         self.delete = "Delete"
+        self.file = "File"
+        self.settings = "Settings"
+        self.new_items = "New items"
 
     def setLanguage(self, language: str) -> None:
         self.language = language
@@ -50,5 +53,8 @@ class Language:
             self.load_example = "Завантажити приклад"
             self.browse = "Знайти"
             self.delete = "Видалити"
+            self.file = "Файл"
+            self.settings = "Налатування"
+            self.new_items = "Додати нові"
         else:
             self.init_language()

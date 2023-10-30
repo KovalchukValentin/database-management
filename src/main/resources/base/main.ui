@@ -324,19 +324,18 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="separator"/>
-    <addaction name="actionMenu"/>
+    <addaction name="actionNew_items"/>
     <addaction name="actionImport_CSV"/>
     <addaction name="actionExport_CSV"/>
     <addaction name="separator"/>
-    <addaction name="actionProperties"/>
+    <addaction name="actionSettings"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionMenu">
+  <action name="actionNew_items">
    <property name="text">
-    <string>New item</string>
+    <string>New items</string>
    </property>
   </action>
   <action name="actionImport_CSV">
@@ -349,9 +348,9 @@
     <string>Export CSV</string>
    </property>
   </action>
-  <action name="actionProperties">
+  <action name="actionSettings">
    <property name="text">
-    <string>Properties</string>
+    <string>Settings</string>
    </property>
   </action>
  </widget>
