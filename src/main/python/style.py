@@ -5,6 +5,37 @@ class Theme:
     def get_theme(self) -> str:
         if self.theme == "dark_gray":
             return """
+                QMenuBar {
+                background-color: #333333;
+                color: #FFFFFF;
+                }
+                
+                QMenuBar::item {
+                    background-color: #333333;
+                    color: #FFFFFF;
+                    padding: 4px 10px;
+                }
+                
+                QMenuBar::item:selected {
+                    background-color: #555555;
+                    color: #FFFFFF;
+                }
+                
+                QMenu {
+                    background-color: #333333;
+                    border: 1px solid #555555;
+                }
+                
+                QMenu::item {
+                    background-color: transparent;
+                    color: #FFFFFF;
+                    padding: 4px 20px;
+                }
+                
+                QMenu::item:selected {
+                    background-color: #555555;
+                    color: #FFFFFF;
+                }
                 QWidget{
                     background-color: #333333;
                 }
