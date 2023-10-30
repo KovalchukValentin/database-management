@@ -6,7 +6,7 @@ import pyperclip
 from PyQt5.QtCore import Qt
 
 from PyQt5.QtGui import QStandardItem, QStandardItemModel, QIntValidator
-from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QHeaderView, QFileDialog
+from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QHeaderView, QFileDialog, QMainWindow
 from PyQt5 import QtWidgets
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
@@ -20,7 +20,7 @@ from logger import Logger
 from style import Theme
 
 
-class MainWindow(QDialog):
+class MainWindow(QMainWindow):
     def __init__(self, appctxt, db_handler):
         # Constructor for the MainWindow class
         # Initializes the main window with the provided parameters
@@ -32,7 +32,8 @@ class MainWindow(QDialog):
         self.db_handler = db_handler
         self.filter_manager = FilterManager()
         self.appctxt = appctxt
-
+        self.setFixedHeight(975)
+        self.setFixedWidth(1680)
         self.window_import_csv = None
         self.window_item = None
 
@@ -465,14 +466,9 @@ def main():
 
     appctxt = ApplicationContext()
     main_window = MainWindow(appctxt, db_handler)
-
-    widget = QtWidgets.QStackedWidget()
-    widget.addWidget(main_window)
-    widget.setFixedHeight(975)
-    widget.setFixedWidth(1680)
-    widget.move(0, 0)
-    widget.setWindowTitle("Developed By @Valent_nk")
-    widget.show()
+    main_window.move(0, 0)
+    main_window.setWindowTitle("Developed By @Valent_nk")
+    main_window.show()
 
     try:
         sys.exit(appctxt.app.exec_())
