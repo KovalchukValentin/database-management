@@ -157,19 +157,24 @@ class CSVExporter:
             self.path_file = Path(f'backup/{datetime.now().strftime(Settings().format_data)}.csv')
             self.path_file.touch(exist_ok=True)
         else:
-            self.path_file = Path(f"{path_dir}/{Settings().format_data}")
+            self.path_file = Path(f"{path_dir}/{datetime.now().strftime(Settings().format_data)}.csv")
             self.path_file.touch()
+        self.export_to_file()
 
     def export_to_file(self):
-        with open(self.path_file, 'w', newline='') as csv_file:
+        with open(self.path_file, 'w', newline='', encoding='utf-8') as csv_file:
 
             csv_writer = csv.writer(csv_file)
             csv_writer.writerow(['Group Name STRING',
-                                 'Taste STRING,Nicotine ml INTEGER',
-                                 'Volume mg INTEGER,Price FLOAT',
+                                 'Taste STRING',
+                                 'Nicotine ml INTEGER',
+                                 'Volume mg INTEGER',
+                                 'Price FLOAT',
                                  'Code UNIQUE STRING',
                                  'Count INTEGER',
                                  'id'])
             # Write the data to the CSV file
             for itemData in self.item_datas:
-                csv_writer.writerow(itemData.to_list()[1::].append(itemData.id_))
+                row = itemData.to_list()[1::]
+                row.append(itemData.id_)
+                csv_writer.writerow(row)

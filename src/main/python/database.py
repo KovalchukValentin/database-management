@@ -237,6 +237,23 @@ class DatabaseHandler:
         rows = self.cursor.fetchall()
         return rows
 
+    def retrieve_all_item_data(self):
+        retrieve_query = "SELECT * FROM items ORDER BY id ASC"
+        self.cursor.execute(retrieve_query)
+        rows = self.cursor.fetchall()
+        item_datas = []
+        for row in rows:
+            item_datas.append(ItemData(id_=row[0],
+                                       group_name=row[1],
+                                       taste=row[2],
+                                       nicotine=row[3],
+                                       volume=row[4],
+                                       price=row[5],
+                                       code=row[6],
+                                       count=row[7],
+                                       ))
+        return item_datas
+
     def count_rows_from_items_where_group_name(self, group_name):
         """Count rows from the 'items' table for a specific group.
 

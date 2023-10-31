@@ -13,7 +13,7 @@ from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from database import DatabaseHandler
 from PyQt5.uic import loadUi
 
-from services import ItemData, FilterManager, CSVImporter
+from services import ItemData, FilterManager, CSVImporter, CSVExporter
 from language import Language
 from setting import Settings
 from logger import Logger
@@ -51,6 +51,7 @@ class MainWindow(QMainWindow):
         # Initializes menu buttons and sets up event connections
         self.actionNew_items.triggered.connect(self.press_add_items)
         self.actionImport_CSV.triggered.connect(self.press_import_csv)
+        self.actionExport_CSV.triggered.connect(self.press_export_csv)
         self.github_btn.clicked.connect(lambda: webbrowser.open("https://github.com/KovalchukValentin"))
         self.in_stock_checkBox.stateChanged.connect(self.on_in_stock_checkBox_state_change)
         self.add_items_btn.clicked.connect(self.press_add_items)
@@ -230,7 +231,14 @@ class MainWindow(QMainWindow):
         self.window_item.show()
 
     def press_export_csv(self):
-        pass
+        options = QFileDialog.Options()
+        directory_dialog = QFileDialog()
+        directory_path = directory_dialog.getExistingDirectory(self, 'Open Folder', '', options=options)
+        if not directory_path:
+            return
+        self.logger.add_log(f"Export file scv to: {directory_path}")
+        CSVExporter(item_datas=self.db_handler.retrieve_all_item_data(), path_dir=directory_path, is_backup=False)
+        self.logger.add_log(f"Export successful")
 
     def remove_rows(self):
         # Removes all rows from the table view
