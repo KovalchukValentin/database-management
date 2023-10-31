@@ -55,8 +55,6 @@ class MainWindow(QMainWindow):
         self.actionExport_current_table.triggered.connect(self.press_export_table_csv)
         self.github_btn.clicked.connect(lambda: webbrowser.open("https://github.com/KovalchukValentin"))
         self.in_stock_checkBox.stateChanged.connect(self.on_in_stock_checkBox_state_change)
-        self.add_items_btn.clicked.connect(self.press_add_items)
-        self.import_csv_btn.clicked.connect(self.press_import_csv)
 
     def init_tableview(self):
         # Initializes the table view
@@ -279,7 +277,6 @@ class MainWindow(QMainWindow):
 
     def update_language(self):
         self.in_stock_checkBox.setText(self.language.only_in_stock)
-        self.add_items_btn.setText(self.language.add_items)
         self.edit_btn.setText(self.language.edit)
         self.copy_cod_btn.setText(self.language.cod)
         self.actionNew_items.setText(self.language.new_items)
@@ -287,6 +284,7 @@ class MainWindow(QMainWindow):
         self.actionSettings.setText(self.language.settings)
         self.actionExport_All.setText(self.language.export_all)
         self.actionExport_current_table.setText(self.language.export_current_table)
+        self.filters_label.setText(self.language.filters)
 
 
 class ItemWindow(QWidget):

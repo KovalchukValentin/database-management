@@ -29,6 +29,7 @@ class Language:
         self.new_items = "New items"
         self.export_all = "Export all"
         self.export_current_table = "Export current table"
+        self.filters = "Filters"
 
     def setLanguage(self, language: str) -> None:
         self.language = language
@@ -56,9 +57,10 @@ class Language:
             self.browse = "Знайти"
             self.delete = "Видалити"
             self.file = "Файл"
-            self.settings = "Налатування"
+            self.settings = "Налаштування"
             self.new_items = "Додати нові"
             self.export_all = "Експортувати все"
             self.export_current_table = "Експорт поточної таблиці"
+            self.filters = "Фільтри"
         else:
             self.init_language()
