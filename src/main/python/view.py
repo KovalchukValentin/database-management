@@ -5,8 +5,8 @@ import webbrowser
 import pyperclip
 from PyQt5.QtCore import Qt
 
-from PyQt5.QtGui import QStandardItem, QStandardItemModel, QIntValidator
-from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QHeaderView, QFileDialog, QMainWindow
+from PyQt5.QtGui import QStandardItem, QStandardItemModel, QIntValidator, QKeySequence
+from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QHeaderView, QFileDialog, QMainWindow, QShortcut
 from PyQt5 import QtWidgets
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
@@ -39,6 +39,7 @@ class MainWindow(QMainWindow):
 
         self.init_menu_btns()
         self.init_tableview()
+        self.init_shortcuts()
         self.init_under_tableview_btns()
         self.group_name_comboBox.currentIndexChanged.connect(self.on_combo_selection_change)
         self.search_edit.textChanged.connect(self.on_search_edit_changed)
@@ -78,6 +79,12 @@ class MainWindow(QMainWindow):
         self.minus_one_btn.clicked.connect(self.press_minus_one_to_item)
         self.copy_cod_btn.clicked.connect(self.press_copy_cod_of_item)
         self.disable_btns()
+
+    def init_shortcuts(self):
+        QShortcut(QKeySequence('Ctrl+N'), self).activated.connect(self.press_add_items)
+        QShortcut(QKeySequence('Ctrl+S'), self).activated.connect(self.press_export_all_csv)
+        QShortcut(QKeySequence('Ctrl+Shift+S'), self).activated.connect(self.press_export_all_csv)
+        QShortcut(QKeySequence('Ctrl+F'), self).activated.connect(self.search_edit.setFocus)
 
     def selection_changed(self, selected, deselected):
         # Handler for table view selection change
@@ -230,7 +237,7 @@ class MainWindow(QMainWindow):
         self.window_item.show()
 
     def press_export_all_csv(self):
-        directory_path = self.get_dir_from_file_dialog()
+        directory_path = self.get_dir_from_file_dialog(self.language.export_all)
         if not directory_path:
             return
         self.logger.add_log(f"EXPORT file scv to: {directory_path}")
@@ -238,17 +245,17 @@ class MainWindow(QMainWindow):
         self.logger.add_log(f"EXPORT successful")
 
     def press_export_table_csv(self):
-        directory_path = self.get_dir_from_file_dialog()
+        directory_path = self.get_dir_from_file_dialog(self.language.export_current_table)
         if not directory_path:
             return
         self.logger.add_log(f"EXPORT file scv to: {directory_path} with filters :{str(self.filter_manager)}")
         CSVExporter(item_datas=self.db_handler.retrieve_item_data_with_filters(self.filter_manager), path_dir=directory_path, is_backup=False)
         self.logger.add_log(f"EXPORT successful")
 
-    def get_dir_from_file_dialog(self):
+    def get_dir_from_file_dialog(self, title: str):
         options = QFileDialog.Options()
         directory_dialog = QFileDialog()
-        return directory_dialog.getExistingDirectory(self, 'Open Folder', '', options=options)
+        return directory_dialog.getExistingDirectory(self, title, '', options=options)
 
     def remove_rows(self):
         # Removes all rows from the table view
