@@ -436,12 +436,14 @@ class ImportCSVWindow(QWidget):
         # Imports CSV data, validates it, and inserts item data into the database
         if not self.path_edit.text():
             return
+        self.logger.add_log(f"Import file scv from: {self.path_edit.text()}")
         for item_data in CSVImporter(self.path_edit.text()).get_in_item_data_list():
             if item_data.isValid():
                 try:
                     self.db_handler.insert_item_data(item_data)
                     self.logger.add_log(f"ADD: {item_data}")
                 except:
+                    self.logger.add_log(f"ERROR ADD: {item_data}")
                     continue
         self.main_window.update_table()
         self.main_window.update_group_name_comboBox()
