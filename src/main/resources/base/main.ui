@@ -324,9 +324,16 @@
     <property name="title">
      <string>File</string>
     </property>
+    <widget class="QMenu" name="menuExport_CSV">
+     <property name="title">
+      <string>Export CSV</string>
+     </property>
+     <addaction name="actionExport_All"/>
+     <addaction name="actionExport_current_table"/>
+    </widget>
     <addaction name="actionNew_items"/>
     <addaction name="actionImport_CSV"/>
-    <addaction name="actionExport_CSV"/>
+    <addaction name="menuExport_CSV"/>
     <addaction name="separator"/>
     <addaction name="actionSettings"/>
    </widget>
@@ -343,14 +350,19 @@
     <string>Import CSV</string>
    </property>
   </action>
-  <action name="actionExport_CSV">
-   <property name="text">
-    <string>Export CSV</string>
-   </property>
-  </action>
   <action name="actionSettings">
    <property name="text">
     <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionExport_All">
+   <property name="text">
+    <string>Export All</string>
+   </property>
+  </action>
+  <action name="actionExport_current_table">
+   <property name="text">
+    <string>Export current table</string>
    </property>
   </action>
  </widget>

@@ -254,6 +254,20 @@ class DatabaseHandler:
                                        ))
         return item_datas
 
+    def retrieve_item_data_with_filters(self, filter_manager: FilterManager):
+        item_datas = []
+        for row in self.retrieve_items_where_filter_manager(filter_manager=filter_manager):
+            item_datas.append(ItemData(id_=row[0],
+                                       group_name=row[1],
+                                       taste=row[2],
+                                       nicotine=row[3],
+                                       volume=row[4],
+                                       price=row[5],
+                                       code=row[6],
+                                       count=row[7],
+                                       ))
+        return item_datas
+
     def count_rows_from_items_where_group_name(self, group_name):
         """Count rows from the 'items' table for a specific group.
 

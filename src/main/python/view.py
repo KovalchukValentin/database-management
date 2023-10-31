@@ -51,7 +51,8 @@ class MainWindow(QMainWindow):
         # Initializes menu buttons and sets up event connections
         self.actionNew_items.triggered.connect(self.press_add_items)
         self.actionImport_CSV.triggered.connect(self.press_import_csv)
-        self.actionExport_CSV.triggered.connect(self.press_export_csv)
+        self.actionExport_All.triggered.connect(self.press_export_all_csv)
+        self.actionExport_current_table.triggered.connect(self.press_export_table_csv)
         self.github_btn.clicked.connect(lambda: webbrowser.open("https://github.com/KovalchukValentin"))
         self.in_stock_checkBox.stateChanged.connect(self.on_in_stock_checkBox_state_change)
         self.add_items_btn.clicked.connect(self.press_add_items)
@@ -230,15 +231,26 @@ class MainWindow(QMainWindow):
                                           db_handler=self.db_handler)
         self.window_item.show()
 
-    def press_export_csv(self):
-        options = QFileDialog.Options()
-        directory_dialog = QFileDialog()
-        directory_path = directory_dialog.getExistingDirectory(self, 'Open Folder', '', options=options)
+    def press_export_all_csv(self):
+        directory_path = self.get_dir_from_file_dialog()
         if not directory_path:
             return
-        self.logger.add_log(f"Export file scv to: {directory_path}")
+        self.logger.add_log(f"EXPORT file scv to: {directory_path}")
         CSVExporter(item_datas=self.db_handler.retrieve_all_item_data(), path_dir=directory_path, is_backup=False)
-        self.logger.add_log(f"Export successful")
+        self.logger.add_log(f"EXPORT successful")
+
+    def press_export_table_csv(self):
+        directory_path = self.get_dir_from_file_dialog()
+        if not directory_path:
+            return
+        self.logger.add_log(f"EXPORT file scv to: {directory_path} with filters :{str(self.filter_manager)}")
+        CSVExporter(item_datas=self.db_handler.retrieve_item_data_with_filters(self.filter_manager), path_dir=directory_path, is_backup=False)
+        self.logger.add_log(f"EXPORT successful")
+
+    def get_dir_from_file_dialog(self):
+        options = QFileDialog.Options()
+        directory_dialog = QFileDialog()
+        return directory_dialog.getExistingDirectory(self, 'Open Folder', '', options=options)
 
     def remove_rows(self):
         # Removes all rows from the table view
@@ -273,6 +285,8 @@ class MainWindow(QMainWindow):
         self.actionNew_items.setText(self.language.new_items)
         self.menuFile.setTitle(self.language.file)
         self.actionSettings.setText(self.language.settings)
+        self.actionExport_All.setText(self.language.export_all)
+        self.actionExport_current_table.setText(self.language.export_current_table)
 
 
 class ItemWindow(QWidget):
