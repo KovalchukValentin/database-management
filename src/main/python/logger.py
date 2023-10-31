@@ -1,11 +1,13 @@
 from datetime import datetime
 from pathlib import Path
 
+from setting import Settings
+
 
 class Logger:
    def __init__(self):
-       self.format_data = "%d.%m.%Y"
-       self.format_time = "%H:%M:%S"
+       self.format_data = Settings().format_data
+       self.format_time = Settings().format_time
        self.file_path = None
        self.create_today_log_file_if_not_exist()
 
@@ -18,8 +20,3 @@ class Logger:
        current_time = datetime.now().strftime(f"{self.format_data} {self.format_time}")
        with self.file_path.open(mode="a", encoding="utf-8") as file:
            file.write(f"{current_time} {log}\n")
-
-
-if __name__ == "__main__":
-    logger = Logger()
-    logger.add_log("Add")

@@ -1,5 +1,9 @@
 import csv
+from pathlib import Path
 from typing import Dict, Union
+from datetime import datetime
+
+from setting import Settings
 
 
 class FilterManager:
@@ -104,14 +108,14 @@ class ItemData:
         return [self.id_, self.group_name, self.taste, self.nicotine, self.volume, self.price, self.code, self.count]
 
 
-class CSVManager:
-    def __init__(self, path):
+class CSVImporter:
+    def __init__(self, path_file):
         """Initialize a CSVImporter instance.
 
         Args:
             path (str): Path to the CSV file.
         """
-        self.path = path
+        self.path_file = path_file
 
     def get_in_list(self):
         """Read and return CSV data as a list.
@@ -120,7 +124,7 @@ class CSVManager:
             List[List[str]]: CSV data as a list of lists.
         """
         result = []
-        with open(self.path, 'r', newline='', encoding='utf-8') as file:
+        with open(self.path_file, 'r', newline='', encoding='utf-8') as file:
             csv_reader = csv.reader(file)
             for row in csv_reader:
                 result.append(row)
@@ -144,19 +148,28 @@ class CSVManager:
         return [ItemData(None, row[0], row[1], row[2], row[3], row[4], row[5], row[6]) for row in csv_in_list]
 
 
-def path_csv_to_items_data(path_to_csv: str):
-    """Convert CSV data to a list of ItemData instances.
+class CSVExporter:
+    def __init__(self, item_datas, path_dir=None, is_backup=False):
+        self.item_datas = item_datas
 
-    Args:
-        path_to_csv (str): Path to the CSV file.
+        if is_backup:
+            Path("backup").mkdir(parents=True, exist_ok=True)
+            self.path_file = Path(f'backup/{datetime.now().strftime(Settings().format_data)}.csv')
+            self.path_file.touch(exist_ok=True)
+        else:
+            self.path_file = Path(f"{path_dir}/{Settings().format_data}")
+            self.path_file.touch()
 
-    Returns:
-        List[List[ItemData]]: List of ItemData instances.
-    """
-    csv_in_list = CSVManager(path_to_csv).get_in_list()
-    if len(csv_in_list) == 1 or not csv_in_list:
-        return []
-    csv_in_list.pop(0)
-    if len(csv_in_list[0]) < 7:
-        return []
-    return [ItemData(None, row[0], row[1], row[2], row[3], row[4], row[5], row[6]) for row in csv_in_list]
+    def export_to_file(self):
+        with open(self.path_file, 'w', newline='') as csv_file:
+
+            csv_writer = csv.writer(csv_file)
+            csv_writer.writerow(['Group Name STRING',
+                                 'Taste STRING,Nicotine ml INTEGER',
+                                 'Volume mg INTEGER,Price FLOAT',
+                                 'Code UNIQUE STRING',
+                                 'Count INTEGER',
+                                 'id'])
+            # Write the data to the CSV file
+            for itemData in self.item_datas:
+                csv_writer.writerow(itemData.to_list()[1::].append(itemData.id_))

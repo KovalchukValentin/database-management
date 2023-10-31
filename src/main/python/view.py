@@ -13,7 +13,7 @@ from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from database import DatabaseHandler
 from PyQt5.uic import loadUi
 
-from services import ItemData, path_csv_to_items_data, FilterManager, CSVManager
+from services import ItemData, FilterManager, CSVImporter
 from language import Language
 from setting import Settings
 from logger import Logger
@@ -267,7 +267,6 @@ class MainWindow(QMainWindow):
         self.actionSettings.setText(self.language.settings)
 
 
-
 class ItemWindow(QWidget):
     def __init__(self, main_window: MainWindow, appctxt, db_handler, item_data=ItemData()):
         # Constructor for the ItemWindow class
@@ -437,7 +436,7 @@ class ImportCSVWindow(QWidget):
         # Imports CSV data, validates it, and inserts item data into the database
         if not self.path_edit.text():
             return
-        for item_data in CSVManager(self.path_edit.text()).get_in_item_data_list():
+        for item_data in CSVImporter(self.path_edit.text()).get_in_item_data_list():
             if item_data.isValid():
                 try:
                     self.db_handler.insert_item_data(item_data)
