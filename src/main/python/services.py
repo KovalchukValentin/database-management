@@ -104,7 +104,7 @@ class ItemData:
         return [self.id_, self.group_name, self.taste, self.nicotine, self.volume, self.price, self.code, self.count]
 
 
-class CSVImporter:
+class CSVManager:
     def __init__(self, path):
         """Initialize a CSVImporter instance.
 
@@ -126,6 +126,23 @@ class CSVImporter:
                 result.append(row)
         return result
 
+    def get_in_item_data_list(self):
+        """Convert CSV data to a list of ItemData instances.
+
+            Args:
+                path_to_csv (str): Path to the CSV file.
+
+            Returns:
+                List[List[ItemData]]: List of ItemData instances.
+            """
+        csv_in_list = self.get_in_list()
+        if len(csv_in_list) == 1 or not csv_in_list:
+            return []
+        csv_in_list.pop(0)
+        if len(csv_in_list[0]) < 7:
+            return []
+        return [ItemData(None, row[0], row[1], row[2], row[3], row[4], row[5], row[6]) for row in csv_in_list]
+
 
 def path_csv_to_items_data(path_to_csv: str):
     """Convert CSV data to a list of ItemData instances.
@@ -136,7 +153,7 @@ def path_csv_to_items_data(path_to_csv: str):
     Returns:
         List[List[ItemData]]: List of ItemData instances.
     """
-    csv_in_list = CSVImporter(path_to_csv).get_in_list()
+    csv_in_list = CSVManager(path_to_csv).get_in_list()
     if len(csv_in_list) == 1 or not csv_in_list:
         return []
     csv_in_list.pop(0)
