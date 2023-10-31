@@ -147,7 +147,7 @@
          <item>
           <widget class="QLabel" name="label_2">
            <property name="text">
-            <string>Version 1.3.82 Developed by https://github.com/KovalchukValentin</string>
+            <string>Version 1.3.84 Developed by https://github.com/KovalchukValentin</string>
            </property>
           </widget>
          </item>
@@ -323,11 +323,21 @@
      <addaction name="actionExport_All"/>
      <addaction name="actionExport_current_table"/>
     </widget>
+    <widget class="QMenu" name="menuBackup">
+     <property name="title">
+      <string>Backup...</string>
+     </property>
+     <addaction name="actionBackup_now"/>
+     <addaction name="actionShow_Backups"/>
+    </widget>
     <addaction name="actionNew_items"/>
     <addaction name="actionImport_CSV"/>
     <addaction name="menuExport_CSV"/>
     <addaction name="separator"/>
     <addaction name="action_Settings"/>
+    <addaction name="separator"/>
+    <addaction name="actionLogs"/>
+    <addaction name="menuBackup"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -360,6 +370,21 @@
   <action name="action_Settings">
    <property name="text">
     <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionLogs">
+   <property name="text">
+    <string>Logs</string>
+   </property>
+  </action>
+  <action name="actionBackup_now">
+   <property name="text">
+    <string>Backup now</string>
+   </property>
+  </action>
+  <action name="actionShow_Backups">
+   <property name="text">
+    <string>Show Backups</string>
    </property>
   </action>
  </widget>

@@ -1,4 +1,6 @@
+import os
 import shutil
+import subprocess
 import sys
 import webbrowser
 
@@ -59,6 +61,10 @@ class MainWindow(QMainWindow):
         self.github_btn.clicked.connect(lambda: webbrowser.open("https://github.com/KovalchukValentin"))
         self.in_stock_checkBox.stateChanged.connect(self.on_in_stock_checkBox_state_change)
         self.action_Settings.triggered.connect(self.press_settings)
+        self.actionLogs.triggered.connect(self.press_logs)
+        self.actionBackup_now.triggered.connect(self.press_backup_now)
+        self.actionShow_Backups.triggered.connect(self.press_show_backup)
+
 
     def init_tableview(self):
         # Initializes the table view
@@ -260,6 +266,16 @@ class MainWindow(QMainWindow):
             self.window_setting = SettingsWindow(main_window=self,
                                           appctxt=self.appctxt)
         self.window_setting.show()
+
+    def press_logs(self):
+        subprocess.Popen(f'explorer /select, "{os.getcwd()}\\log\\"', shell=True)
+
+    def press_backup_now(self):
+        CSVExporter(item_datas=self.db_handler.retrieve_all_item_data(), is_backup=True)
+        self.logger.add_log(f"BACKUP")
+
+    def press_show_backup(self):
+        subprocess.Popen(f'explorer /select, "{os.getcwd()}\\backup\\"', shell=True)
 
     def get_dir_from_file_dialog(self, title: str):
         options = QFileDialog.Options()

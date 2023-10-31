@@ -154,11 +154,10 @@ class CSVExporter:
 
         if is_backup:
             Path("backup").mkdir(parents=True, exist_ok=True)
-            self.path_file = Path(f'backup/{datetime.now().strftime(Settings().format_data)}.csv')
-            self.path_file.touch(exist_ok=True)
+            self.path_file = Path(f'backup/{datetime.now().strftime(f"{Settings().format_data}_%H%M%S")}_backup.csv')
         else:
-            self.path_file = Path(f"{path_dir}/{datetime.now().strftime(Settings().format_data)}.csv")
-            self.path_file.touch()
+            self.path_file = Path(f'{path_dir}/{datetime.now().strftime(f"{Settings().format_data}_%H%M%S")}.csv')
+        self.path_file.touch()
         self.export_to_file()
 
     def export_to_file(self):
