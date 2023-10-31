@@ -34,8 +34,10 @@ class MainWindow(QMainWindow):
         self.appctxt = appctxt
         self.setFixedHeight(975)
         self.setFixedWidth(1680)
+
         self.window_import_csv = None
         self.window_item = None
+        self.window_setting = None
 
         self.init_menu_btns()
         self.init_tableview()
@@ -56,6 +58,7 @@ class MainWindow(QMainWindow):
         self.actionExport_current_table.triggered.connect(self.press_export_table_csv)
         self.github_btn.clicked.connect(lambda: webbrowser.open("https://github.com/KovalchukValentin"))
         self.in_stock_checkBox.stateChanged.connect(self.on_in_stock_checkBox_state_change)
+        self.action_Settings.triggered.connect(self.press_settings)
 
     def init_tableview(self):
         # Initializes the table view
@@ -252,6 +255,12 @@ class MainWindow(QMainWindow):
         CSVExporter(item_datas=self.db_handler.retrieve_item_data_with_filters(self.filter_manager), path_dir=directory_path, is_backup=False)
         self.logger.add_log(f"EXPORT successful")
 
+    def press_settings(self):
+        if self.window_setting is None:
+            self.window_setting = SettingsWindow(main_window=self,
+                                          appctxt=self.appctxt)
+        self.window_setting.show()
+
     def get_dir_from_file_dialog(self, title: str):
         options = QFileDialog.Options()
         directory_dialog = QFileDialog()
@@ -288,7 +297,7 @@ class MainWindow(QMainWindow):
         self.copy_cod_btn.setText(self.language.cod)
         self.actionNew_items.setText(self.language.new_items)
         self.menuFile.setTitle(self.language.file)
-        self.actionSettings.setText(self.language.settings)
+        self.action_Settings.setText(self.language.settings)
         self.actionExport_All.setText(self.language.export_all)
         self.actionExport_current_table.setText(self.language.export_current_table)
         self.filters_label.setText(self.language.filters)
@@ -304,6 +313,7 @@ class ItemWindow(QWidget):
         self.language = Language(Settings().language)
         self.setWindowTitle(self.language.item)
         self.logger = Logger()
+        self.setStyleSheet(Theme(Settings().theme).get_theme())
 
         self.main_window = main_window
         self.db_handler = db_handler
@@ -323,7 +333,6 @@ class ItemWindow(QWidget):
             self.delete_btn.setEnabled(False)
 
         self.update_language()
-        self.setStyleSheet(Theme(Settings().theme).get_theme())
 
     def press_save(self):
         # Handler for save button press
@@ -493,6 +502,17 @@ class ImportCSVWindow(QWidget):
     def update_language(self):
         self.load_example_btn.setText(self.language.load_example)
         self.browse_btn.setText(self.language.browse)
+
+
+class SettingsWindow(QDialog):
+    def __init__(self, main_window: MainWindow, appctxt):
+        super().__init__()
+        loadUi(appctxt.get_resource("settings.ui"), self)
+        self.language = Language(Settings().language)
+        self.setWindowTitle(self.language.settings)
+        self.logger = Logger()
+        self.setStyleSheet(Theme(Settings().theme).get_theme())
+        self.main_window = main_window
 
 
 def main():

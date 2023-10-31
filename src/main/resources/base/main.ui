@@ -147,7 +147,7 @@
          <item>
           <widget class="QLabel" name="label_2">
            <property name="text">
-            <string>Version 1.2.72 Developed by https://github.com/KovalchukValentin</string>
+            <string>Version 1.3.82 Developed by https://github.com/KovalchukValentin</string>
            </property>
           </widget>
          </item>
@@ -327,7 +327,7 @@
     <addaction name="actionImport_CSV"/>
     <addaction name="menuExport_CSV"/>
     <addaction name="separator"/>
-    <addaction name="actionSettings"/>
+    <addaction name="action_Settings"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -342,11 +342,6 @@
     <string>Import CSV</string>
    </property>
   </action>
-  <action name="actionSettings">
-   <property name="text">
-    <string>Settings</string>
-   </property>
-  </action>
   <action name="actionExport_All">
    <property name="text">
     <string>Export All</string>
@@ -355,6 +350,16 @@
   <action name="actionExport_current_table">
    <property name="text">
     <string>Export current table</string>
+   </property>
+  </action>
+  <action name="actionComing_soon">
+   <property name="text">
+    <string>Coming soon... mb</string>
+   </property>
+  </action>
+  <action name="action_Settings">
+   <property name="text">
+    <string>Settings</string>
    </property>
   </action>
  </widget>
