@@ -151,7 +151,7 @@ class CSVImporter:
 class CSVExporter:
     def __init__(self, item_datas, path_dir=None, is_backup=False):
         self.item_datas = item_datas
-
+        self.progress = 0
         if is_backup:
             Path("backup").mkdir(parents=True, exist_ok=True)
             self.path_file = Path(f'backup/{datetime.now().strftime(f"{Settings().format_data}_%H%M%S")}_backup.csv')

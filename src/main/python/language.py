@@ -30,6 +30,9 @@ class Language:
         self.export_all = "Export all"
         self.export_current_table = "Export current table"
         self.filters = "Filters"
+        self.done = "Done"
+        self.close = "Close"
+        self.backup = "Backup"
 
     def setLanguage(self, language: str) -> None:
         self.language = language
@@ -62,5 +65,8 @@ class Language:
             self.export_all = "Експортувати все"
             self.export_current_table = "Експорт поточної таблиці"
             self.filters = "Фільтри"
+            self.done = "Завершено"
+            self.close = "Закрити"
+            self.backup = "Резервна копія"
         else:
             self.init_language()

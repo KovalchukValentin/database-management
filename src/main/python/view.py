@@ -40,6 +40,7 @@ class MainWindow(QMainWindow):
         self.window_import_csv = None
         self.window_item = None
         self.window_setting = None
+        self.done_window = None
 
         self.init_menu_btns()
         self.init_tableview()
@@ -64,7 +65,6 @@ class MainWindow(QMainWindow):
         self.actionLogs.triggered.connect(self.press_logs)
         self.actionBackup_now.triggered.connect(self.press_backup_now)
         self.actionShow_Backups.triggered.connect(self.press_show_backup)
-
 
     def init_tableview(self):
         # Initializes the table view
@@ -252,6 +252,7 @@ class MainWindow(QMainWindow):
         self.logger.add_log(f"EXPORT file scv to: {directory_path}")
         CSVExporter(item_datas=self.db_handler.retrieve_all_item_data(), path_dir=directory_path, is_backup=False)
         self.logger.add_log(f"EXPORT successful")
+        self.open_done_window(self.language.export_all)
 
     def press_export_table_csv(self):
         directory_path = self.get_dir_from_file_dialog(self.language.export_current_table)
@@ -260,6 +261,7 @@ class MainWindow(QMainWindow):
         self.logger.add_log(f"EXPORT file scv to: {directory_path} with filters :{str(self.filter_manager)}")
         CSVExporter(item_datas=self.db_handler.retrieve_item_data_with_filters(self.filter_manager), path_dir=directory_path, is_backup=False)
         self.logger.add_log(f"EXPORT successful")
+        self.open_done_window(self.language.export_current_table)
 
     def press_settings(self):
         if self.window_setting is None:
@@ -273,6 +275,7 @@ class MainWindow(QMainWindow):
     def press_backup_now(self):
         CSVExporter(item_datas=self.db_handler.retrieve_all_item_data(), is_backup=True)
         self.logger.add_log(f"BACKUP")
+        self.open_done_window(self.language.backup)
 
     def press_show_backup(self):
         subprocess.Popen(f'explorer /select, "{os.getcwd()}\\backup\\"', shell=True)
@@ -306,6 +309,11 @@ class MainWindow(QMainWindow):
                                                      appctxt=self.appctxt,
                                                      db_handler=self.db_handler)
         self.window_import_csv.show()
+
+    def open_done_window(self, title):
+        if self.done_window is None:
+            self.done_window = DoneWindow(self, self.appctxt, title)
+        self.done_window.show()
 
     def update_language(self):
         self.in_stock_checkBox.setText(self.language.only_in_stock)
@@ -531,6 +539,28 @@ class SettingsWindow(QDialog):
         self.main_window = main_window
 
 
+class DoneWindow(QDialog):
+    def __init__(self, main_window:MainWindow, appctxt, name:str):
+        super().__init__()
+        loadUi(appctxt.get_resource("done.ui"), self)
+        self.language = Language(Settings().language)
+        self.setWindowTitle(name)
+        self.logger = Logger()
+        self.setStyleSheet(Theme(Settings().theme).get_theme())
+        self.main_window = main_window
+
+        self.close_btn.clicked.connect(self.close)
+
+        self.update_language()
+
+    def update_language(self):
+        self.close_btn.setText(self.language.close)
+        self.done_label.setText(self.language.done)
+
+    def closeEvent(self, event) -> None:
+        self.main_window.done_window = None
+
+
 def main():
     db_handler = DatabaseHandler('database.db')
     db_handler.connect()
@@ -541,7 +571,6 @@ def main():
     main_window.move(0, 0)
     main_window.setWindowTitle("Developed By @Valent_nk")
     main_window.show()
-
     try:
         sys.exit(appctxt.app.exec_())
     except ValueError as err:

@@ -147,7 +147,7 @@
          <item>
           <widget class="QLabel" name="label_2">
            <property name="text">
-            <string>Version 1.3.84 Developed by https://github.com/KovalchukValentin</string>
+            <string>Version 1.3.85 Developed by https://github.com/KovalchukValentin</string>
            </property>
           </widget>
          </item>
