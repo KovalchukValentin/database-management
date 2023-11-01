@@ -33,6 +33,7 @@ class Language:
         self.done = "Done"
         self.close = "Close"
         self.backup = "Backup"
+        self.import_ = "Import"
 
     def setLanguage(self, language: str) -> None:
         self.language = language
